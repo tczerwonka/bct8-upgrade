@@ -1,0 +1,24 @@
+Sun 19 Apr 2020 10:29:27 AM CDT
+
+Facepanel:
+
+J552:
+1	gnd
+2	
+3
+4
+5	NC
+6	alert led -- one half
+7	369e column
+8	2580 column
+9	147. column
+10	state/pvt column
+11	delay/lo	column
+
+12	tdp row
+13	456 row
+14	789 row
+15	.03 row
+16	fn/trnk/hold row
+17	gnd
+	

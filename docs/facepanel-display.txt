@@ -1,0 +1,18 @@
+Sun 19 Apr 2020 10:32:42 AM CDT
+
+Uses an NEC uPD7225GB microprocessor
+
+Similar to KTMS1201?
+
+J551
+
+1	gnd
+2	reset
+3	C/D
+4	BUSY^
+5	CS^
+6	SI
+7	SCK^
+8	vlc3 -- sets contrast 100k to ground for future?  15k for now
+9	Vdd (+5v)
+
