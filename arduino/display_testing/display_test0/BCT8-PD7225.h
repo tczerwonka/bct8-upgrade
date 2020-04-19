@@ -1,11 +1,11 @@
 /*****************************************************************
-| KTM-S1201 Arduino library                                      |
-| Developed and maintanied by MCUdude                            |
-| https://github.com/MCUdude/KTMS1201                            |            
-|                                                                |
-| Based on Tronixstruff's work                                   |
-| tronixstuff.com/2013/03/11/arduino-and-ktm-s1201-lcd-modules   |
-| Released to the public domain                                  |
+  | KTM-S1201 Arduino library                                      |
+  | Developed and maintanied by MCUdude                            |
+  | https://github.com/MCUdude/KTMS1201                            |
+  |                                                                |
+  | Based on Tronixstruff's work                                   |
+  | tronixstuff.com/2013/03/11/arduino-and-ktm-s1201-lcd-modules   |
+  | Released to the public domain                                  |
 *****************************************************************/
 
 
@@ -16,9 +16,9 @@
 
 //      ---   0x01
 //0x10 |   |  0x02
-//0x20  ---  
+//0x20  ---
 //0x40 |   |  0x04
-//0x80  --- o 0x08 
+//0x80  --- o 0x08
 
 /* LCD characters */
 static const uint8_t numberOfCharacters = 67;
@@ -26,10 +26,47 @@ static const uint8_t sevenSegHex[67] = {0x06/*1*/, 0xE3/*2*/, 0xA7/*3*/, 0x36/*4
 static const uint8_t charArray[67] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ' ', '-', '_', '*', '=', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
 /* special characters */
-static const uint8_t specialCharacters = 2;
-static const uint8_t specialHex[2] = {0x01/*ATT*/, 0x02/*RMT*/};
-static const uint8_t specialHexPos[2] = {0x00/*ATT*/, 0x00/*RMT*/};
-static const uint8_t specialArray[2] = {'ATT', 'RMT'};
+//static const uint8_t specialCharacters = 2;
+//static const uint8_t specialHex[2] = {0x01/*ATT*/, 0x02/*RMT*/};
+//static const uint8_t specialHexPos[2] = {0x00/*ATT*/, 0x00/*RMT*/};
+//static const uint8_t specialArray[2] = {'ATT', 'RMT'};
+
+
+struct specChar {
+  char symbol[4];
+  uint8_t pos;
+  uint8_t code;
+};
+
+static const uint8_t specialCharacters = 23;
+static const specChar elements[] = {
+  {"MRN", 0, B00000001},
+  {"MLO", 0, B00000010},
+  {"RMT", 0, B00000100},
+  {"ATT", 0, B00001000},
+  {"RR", 0, B00010000},
+  {"AIR", 0, B00100000},
+  {"CB", 0, B01000000},
+  {"NWS", 0, B10000000},
+  {"BN2", 1, B00000101},
+  {"BN1", 1, B00000110},
+  {"BNX", 1, B00001100},
+  {"BN3", 1, B00010100},
+  {"BN4", 1, B00100100},
+  {"BN5", 1, B01000100},
+  {"PVT", 2, B00000001},
+  {"POL", 2, B00000010},
+  {"WX", 2, B00000100},
+  {"FIR", 2, B00001000},
+  {"M", 2, B00010000},
+  {"E", 2, B00100000},
+  {"L", 2, B01000000},
+  {"LST", 2, B10000000},
+  {"TRK", 3, B00000001},
+
+};
+
+
 
 /* LCD modes */
 const uint8_t _Mode = 0x40;     // LCD speed. Se uPD7225 datasheet for more infp
@@ -68,7 +105,7 @@ class KTMS1201
     void noBlink();
     void display();
     void noDisplay();
-    
+
     void print(String);
     void print(char*);
     void print(char);
@@ -78,7 +115,7 @@ class KTMS1201
     void print(int16_t, uint8_t base = DEC);
     void print(double, uint8_t decimals = 2);
 
-    void specialChar(char*);
+    void specialChar(String);
 
   private:
     /* Private methods */

@@ -330,15 +330,20 @@ void KTMS1201::print(double n, uint8_t digits)
 /* specialChar --                                                            */
 /*   the BCT8 has a bunch of special chars - deal with it here               */
 /*---------------------------------------------------------------------------*/
-void KTMS1201::specialChar(char* characterArray)
+void KTMS1201::specialChar(String characterArray)
 {
   //the cursorPos isn't really a thing here
 
+  
   for(uint8_t i = 0; i < specialCharacters; i++)
   { 
-    if(characterArray == specialArray[i])
+    Serial.print("have: ");
+    Serial.println(characterArray);
+    Serial.print("check: ");
+    Serial.println(elements[i].symbol);
+    if(characterArray == elements[i].symbol)
     {
-      uint8_t p = 15 - specialHexPos[i];
+      uint8_t p = 15 - elements[i].pos;
       digitalWrite(_CD, HIGH);
       digitalWrite(_CS, LOW);
       wait(); // Wait for the LCD to finish
@@ -347,12 +352,14 @@ void KTMS1201::specialChar(char* characterArray)
       digitalWrite(_CD, LOW);    //Put in data mode
       wait(); // Wait for the LCD to finish
 
-      write(specialHex[i]);
+      write(elements[i].code);
       break;
     }
+   
   } 
 
   digitalWrite(_CS, HIGH); //deselect LCD to display data  
+
 }
 
 
@@ -466,5 +473,3 @@ void KTMS1201::wait()
 	else
 		while(digitalRead(_BUSY) == 0);
 }
-
-
