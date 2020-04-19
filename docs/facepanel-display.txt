@@ -3,6 +3,9 @@ Sun 19 Apr 2020 10:32:42 AM CDT
 Uses an NEC uPD7225GB microprocessor
 
 Similar to KTMS1201?
+using https://github.com/MCUdude/KTMS1201
+https://github.com/tczerwonka/KTMS1201
+...had to modify this for a 16 "position" display that is on the BCT8.
 
 J551
 
@@ -16,3 +19,21 @@ J551
 8	vlc3 -- sets contrast 100k to ground for future?  15k for now
 9	Vdd (+5v)
 
+##########
+display position:
+0	ATT, NEWS, ...
+1	BANK 12345...
+2	M E L...
+3	upper-right, right-most digit
+4	lower-right, right-most digit
+5	upper-right, middle digit
+6	lower-right, middle digit
+7	upper-right, left-most digit
+8	lower-right, left-most digit
+9	X00.0000
+10	0X0.0000
+11	00X.0000
+12	000.X000
+13	000.0X00
+14	000.00X0
+15	000.000X
