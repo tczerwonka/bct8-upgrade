@@ -89,7 +89,7 @@ void KTMS1201::command(uint8_t cmd)
 
 void KTMS1201::customChar(uint8_t character)
 {
-  uint8_t p = 11 - _cursorPos;
+  uint8_t p = 15 - _cursorPos;
   _cursorPos++;
   digitalWrite(_CD, HIGH);
   digitalWrite(_CS, LOW);
@@ -435,6 +435,3 @@ void KTMS1201::wait()
 	else
 		while(digitalRead(_BUSY) == 0);
 }
-
-
-

@@ -1,3 +1,4 @@
+
 /*
 ##############################################################################
 # arduino display test zero
@@ -36,7 +37,7 @@ void setup()
 
 void loop()
 { 
-  for (int i = 0; i <= 127; i++) {
+  for (int i = 0; i <= 15; i++) {
     //lcd.setCursor(7);
     Serial.println(i);
 
