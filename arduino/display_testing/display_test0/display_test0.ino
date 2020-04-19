@@ -37,6 +37,9 @@ void setup()
 
 void loop()
 { 
+
+    lcd.specialChar("RMT");
+    delay(5000);
   for (int i = 0; i <= 15; i++) {
     //lcd.setCursor(7);
     Serial.println(i);

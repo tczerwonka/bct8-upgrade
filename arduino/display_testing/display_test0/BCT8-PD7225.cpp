@@ -113,7 +113,7 @@ void KTMS1201::setCursor(uint8_t cursorPos)
 void KTMS1201::clear(uint8_t start, uint8_t stop)
 {
   // Clear the whole screen
-  if(start == 0 && stop >= 11)
+  if(start == 0 && stop >= 15)
     command(_ClearDsp);
   else
   {
@@ -253,7 +253,7 @@ void KTMS1201::print(char* inputArray)
 
 void KTMS1201::print(char character)
 {
-  uint8_t p = 11 - _cursorPos;
+  uint8_t p = 15 - _cursorPos;
   _cursorPos++;
   digitalWrite(_CD, HIGH);
   digitalWrite(_CS, LOW);
@@ -322,6 +322,37 @@ void KTMS1201::print(int16_t n, uint8_t base)
 void KTMS1201::print(double n, uint8_t digits)
 {
   printFloat(n, digits);
+}
+
+
+
+/*---------------------------------------------------------------------------*/
+/* specialChar --                                                            */
+/*   the BCT8 has a bunch of special chars - deal with it here               */
+/*---------------------------------------------------------------------------*/
+void KTMS1201::specialChar(char* characterArray)
+{
+  //the cursorPos isn't really a thing here
+
+  for(uint8_t i = 0; i < specialCharacters; i++)
+  { 
+    if(characterArray == specialArray[i])
+    {
+      uint8_t p = 15 - specialHexPos[i];
+      digitalWrite(_CD, HIGH);
+      digitalWrite(_CS, LOW);
+      wait(); // Wait for the LCD to finish
+      write(_LoadPtr+p*2);
+  
+      digitalWrite(_CD, LOW);    //Put in data mode
+      wait(); // Wait for the LCD to finish
+
+      write(specialHex[i]);
+      break;
+    }
+  } 
+
+  digitalWrite(_CS, HIGH); //deselect LCD to display data  
 }
 
 
@@ -435,3 +466,5 @@ void KTMS1201::wait()
 	else
 		while(digitalRead(_BUSY) == 0);
 }
+
+
