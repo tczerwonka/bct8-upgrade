@@ -10,6 +10,7 @@
 */
 
 #include "BCT8-PD7225.h"
+#include <Keypad.h>
 
 // Pin definitions
 byte N_SCK = 3;
@@ -21,6 +22,38 @@ byte CS = 8;
 
 // Initialize the library with the interface pins
 KTMS1201 lcd(N_SCK, SI, CD, RESET, BUSY, CS);
+
+//keypad stuff
+/*
+const byte ROWS = 5;
+const byte COLS = 5;
+char keys[ROWS][COLS] = {
+  {'1','2','3','A','B'},
+  {'4','5','6','B','C'},
+  {'7','8','9','D','F'},
+  {'.','0','E','G','H'},
+  {'I','J','K','L','M'}
+};
+byte rowPins[ROWS] = {11, 12, 13, 14, 15};
+byte colPins[COLS] = {2, 9, 10, 16, 17};
+Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+*/
+
+const byte ROWS = 3;
+const byte COLS = 1;
+char keys[ROWS][COLS] = {
+  {'a'},
+  {'b'},
+  {'c'}
+};
+byte rowPins[ROWS]={12,13,14};
+byte colPins[COLS]={9};
+Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+
+
+
+
+
 
 void setup()
 {
@@ -37,6 +70,16 @@ void setup()
 
 void loop()
 {
+
+  
+  char key = keypad.getKey();
+
+  if (key != NO_KEY) 
+  {
+    Serial.println(key);
+  }
+
+  
   /*
     lcd.specialChar("MRN");
     delay(1000);
@@ -82,6 +125,7 @@ void loop()
     lcd.specialChar("LST");
     delay(1000);
   */
+  /*
   lcd.specialChar("HWY");
   delay(1000);
   lcd.specialChar("SRH");
@@ -104,60 +148,13 @@ void loop()
   delay(1000);
   lcd.specialChar("FLS");
   delay(5000);
+*/
 
 
 
-
-  for (int i = 8; i <= 15; i++) {
-    //lcd.setCursor(7);
-    Serial.println(i);
-
-    lcd.setCursor(i);
-    lcd.customChar(B00000001);
-    delay(1000);
-    lcd.setCursor(i);
-    lcd.customChar(B00000010);
-    delay(1000);
-    lcd.setCursor(i);
-    lcd.customChar(B00000100);
-    delay(1000);
-    lcd.setCursor(i);
-    lcd.customChar(B00001000);
-    delay(1000);
-    lcd.setCursor(i);
-    lcd.customChar(B00010000);
-    delay(1000);
-    lcd.setCursor(i);
-    lcd.customChar(B00100000);
-    delay(1000);
-    lcd.setCursor(i);
-    lcd.customChar(B01000000);
-    delay(1000);
-    lcd.setCursor(i);
-    lcd.customChar(B10000000);
-    delay(1000);
-
-
-    /*
-        for (int j = 0; j <= 15; j++) {
-          lcd.setCursor(5);
-          lcd.print(j);
-
-          //print the element
-          lcd.setCursor(i);
-          lcd.customChar(j);
-          delay(100);
-        }
-    */
-
-    lcd.clear();
-  }
-
-
-
-  // Set the cursor at the 9th digit
-  //lcd.setCursor(8);
+  //Set the cursor at the 9th digit
+  lcd.setCursor(8);
 
   // Print seconds
-  //lcd.print(millis()/1000);
+  lcd.print(millis()/1000);
 }
