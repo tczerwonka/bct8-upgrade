@@ -54,44 +54,87 @@ void loop()
     delay(1000);
     lcd.specialChar("NWS");
     delay(1000);
-  */
-  lcd.specialChar("BN1");
-  delay(1000);
-  lcd.specialChar("BN2");
-  delay(1000);
-  lcd.specialChar("BN3");
-  delay(1000);
-  lcd.specialChar("BN4");
-  delay(1000);
-  lcd.specialChar("BN5");
-  delay(1000);
-  lcd.specialChar("PVT");
-  delay(1000);    
-  lcd.specialChar("POL");
-  delay(1000);    
-  lcd.specialChar("WX");
-  delay(1000);    
-  lcd.specialChar("FIR");
-  delay(1000);    
-  lcd.specialChar("M");
-  delay(1000);
+    lcd.specialChar("BN1");
+    delay(1000);
+    lcd.specialChar("BN2");
+    delay(1000);
+    lcd.specialChar("BN3");
+    delay(1000);
+    lcd.specialChar("BN4");
+    delay(1000);
+    lcd.specialChar("BN5");
+    delay(1000);
+    lcd.specialChar("PVT");
+    delay(1000);
+    lcd.specialChar("POL");
+    delay(1000);
+    lcd.specialChar("WX");
+    delay(1000);
+    lcd.specialChar("FIR");
+    delay(1000);
+    lcd.specialChar("M");
+    delay(1000);
     lcd.specialChar("E");
-  delay(1000);
+    delay(1000);
     lcd.specialChar("L");
-  delay(1000);
+    delay(1000);
+
     lcd.specialChar("LST");
+    delay(1000);
+  */
+  lcd.specialChar("HWY");
   delay(1000);
-      lcd.specialChar("TRK");
+  lcd.specialChar("SRH");
+  delay(1000);
+  lcd.specialChar("HLD");
+  delay(1000);
+  lcd.specialChar("P");
+  delay(1000);
+  lcd.specialChar("DN");
+  delay(1000);
+  lcd.specialChar("PRI");
+  delay(1000);
+  lcd.specialChar("DEC");
+  delay(1000);
+  lcd.specialChar("LO");
+    delay(1000);
+  lcd.specialChar("DLY");
+  delay(1000);
+  lcd.specialChar("DTA");
+  delay(1000);
+  lcd.specialChar("FLS");
   delay(5000);
 
 
 
-  for (int i = 0; i <= 15; i++) {
+
+  for (int i = 8; i <= 15; i++) {
     //lcd.setCursor(7);
     Serial.println(i);
 
     lcd.setCursor(i);
-    lcd.customChar(0xff);
+    lcd.customChar(B00000001);
+    delay(1000);
+    lcd.setCursor(i);
+    lcd.customChar(B00000010);
+    delay(1000);
+    lcd.setCursor(i);
+    lcd.customChar(B00000100);
+    delay(1000);
+    lcd.setCursor(i);
+    lcd.customChar(B00001000);
+    delay(1000);
+    lcd.setCursor(i);
+    lcd.customChar(B00010000);
+    delay(1000);
+    lcd.setCursor(i);
+    lcd.customChar(B00100000);
+    delay(1000);
+    lcd.setCursor(i);
+    lcd.customChar(B01000000);
+    delay(1000);
+    lcd.setCursor(i);
+    lcd.customChar(B10000000);
     delay(1000);
 
 

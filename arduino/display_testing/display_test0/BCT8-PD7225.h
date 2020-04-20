@@ -26,19 +26,13 @@ static const uint8_t sevenSegHex[67] = {0x06/*1*/, 0xE3/*2*/, 0xA7/*3*/, 0x36/*4
 static const uint8_t charArray[67] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ' ', '-', '_', '*', '=', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
 /* special characters */
-//static const uint8_t specialCharacters = 2;
-//static const uint8_t specialHex[2] = {0x01/*ATT*/, 0x02/*RMT*/};
-//static const uint8_t specialHexPos[2] = {0x00/*ATT*/, 0x00/*RMT*/};
-//static const uint8_t specialArray[2] = {'ATT', 'RMT'};
-
-
 struct specChar {
   char symbol[4];
   uint8_t pos;
   uint8_t code;
 };
 
-static const uint8_t specialCharacters = 23;
+static const uint8_t specialCharacters = 34;
 static const specChar elements[] = {
   {"MRN", 0, B00000001},
   {"MLO", 0, B00000010},
@@ -63,6 +57,17 @@ static const specChar elements[] = {
   {"L", 2, B01000000},
   {"LST", 2, B10000000},
   {"TRK", 3, B00000001},
+  {"HWY", 4, B00001000},
+  {"SRH", 5, B10000000},
+  {"HLD", 7, B10000000},
+  {"P", 8, B00001000},
+  {"DN", 9, B00001000},
+  {"PRI", 10, B00001000},
+  {"DEC", 11, B00001000},
+  {"LO", 12, B00001000},
+  {"DLY", 13, B00001000},
+  {"DTA", 14, B00001000},
+  {"FLS", 15, B00001000}
 
 };
 

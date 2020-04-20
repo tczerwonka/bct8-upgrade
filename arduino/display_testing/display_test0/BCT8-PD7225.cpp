@@ -334,13 +334,10 @@ void KTMS1201::specialChar(String characterArray)
 {
   //the cursorPos isn't really a thing here
 
-  
+  //iterate through all of the special characters that are
+  //available for the one that was specified
   for(uint8_t i = 0; i < specialCharacters; i++)
   { 
-    Serial.print("have: ");
-    Serial.println(characterArray);
-    Serial.print("check: ");
-    Serial.println(elements[i].symbol);
     if(characterArray == elements[i].symbol)
     {
       uint8_t p = 15 - elements[i].pos;
