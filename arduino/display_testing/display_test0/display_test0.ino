@@ -24,31 +24,20 @@ byte CS = 8;
 KTMS1201 lcd(N_SCK, SI, CD, RESET, BUSY, CS);
 
 //keypad stuff
-/*
 const byte ROWS = 5;
 const byte COLS = 5;
 char keys[ROWS][COLS] = {
-  {'1','2','3','A','B'},
-  {'4','5','6','B','C'},
-  {'7','8','9','D','F'},
-  {'.','0','E','G','H'},
-  {'I','J','K','L','M'}
+  {'1', '2', '3', 's', 'D'},
+  {'4', '5', '6', 'p', 'L'},
+  {'7', '8', '9', 'D', 'F'},
+  {'.', '0', 'E', 'r', 'H'},
+  {'i', 'D', 'U', 'k', 'M'}
 };
 byte rowPins[ROWS] = {11, 12, 13, 14, 15};
 byte colPins[COLS] = {2, 9, 10, 16, 17};
 Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
-*/
 
-const byte ROWS = 3;
-const byte COLS = 1;
-char keys[ROWS][COLS] = {
-  {'a'},
-  {'b'},
-  {'c'}
-};
-byte rowPins[ROWS]={12,13,14};
-byte colPins[COLS]={9};
-Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+
 
 
 
@@ -71,15 +60,16 @@ void setup()
 void loop()
 {
 
-  
+  // check for pending event
   char key = keypad.getKey();
 
-  if (key != NO_KEY) 
-  {
+  if (key != NO_KEY) {
     Serial.println(key);
   }
 
-  
+
+
+
   /*
     lcd.specialChar("MRN");
     delay(1000);
@@ -126,29 +116,29 @@ void loop()
     delay(1000);
   */
   /*
-  lcd.specialChar("HWY");
-  delay(1000);
-  lcd.specialChar("SRH");
-  delay(1000);
-  lcd.specialChar("HLD");
-  delay(1000);
-  lcd.specialChar("P");
-  delay(1000);
-  lcd.specialChar("DN");
-  delay(1000);
-  lcd.specialChar("PRI");
-  delay(1000);
-  lcd.specialChar("DEC");
-  delay(1000);
-  lcd.specialChar("LO");
+    lcd.specialChar("HWY");
     delay(1000);
-  lcd.specialChar("DLY");
-  delay(1000);
-  lcd.specialChar("DTA");
-  delay(1000);
-  lcd.specialChar("FLS");
-  delay(5000);
-*/
+    lcd.specialChar("SRH");
+    delay(1000);
+    lcd.specialChar("HLD");
+    delay(1000);
+    lcd.specialChar("P");
+    delay(1000);
+    lcd.specialChar("DN");
+    delay(1000);
+    lcd.specialChar("PRI");
+    delay(1000);
+    lcd.specialChar("DEC");
+    delay(1000);
+    lcd.specialChar("LO");
+    delay(1000);
+    lcd.specialChar("DLY");
+    delay(1000);
+    lcd.specialChar("DTA");
+    delay(1000);
+    lcd.specialChar("FLS");
+    delay(5000);
+  */
 
 
 
@@ -156,5 +146,5 @@ void loop()
   lcd.setCursor(8);
 
   // Print seconds
-  lcd.print(millis()/1000);
+  lcd.print(millis() / 1000);
 }
