@@ -27,14 +27,15 @@ KTMS1201 lcd(N_SCK, SI, CD, RESET, BUSY, CS);
 const byte ROWS = 5;
 const byte COLS = 5;
 char keys[ROWS][COLS] = {
-  {'1', '2', '3', 's', 'D'},
+  {'1', '2', '3', 's', 'y'},
   {'4', '5', '6', 'p', 'L'},
-  {'7', '8', '9', 'D', 'F'},
-  {'.', '0', 'E', 'r', 'H'},
+  {'7', '8', '9', 'v', 'd'},
+  {'.', '0', 'E', 'r', 'p'},
   {'i', 'D', 'U', 'k', 'M'}
 };
-byte rowPins[ROWS] = {11, 12, 13, 14, 15};
+byte rowPins[ROWS] = {11, 12, 18, 14, 15};
 byte colPins[COLS] = {2, 9, 10, 16, 17};
+//swapped D2 for A4 -- 
 Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
 
@@ -55,6 +56,10 @@ void setup()
   lcd.clear();          // Clear the entire LCD
   //lcd.setCursor(1);     // Set cursor at index 0
   //lcd.customChar(0x08); // 0x40 + 0x20 + 0x02 = 0x62 -> slash
+  pinMode(13, OUTPUT); // this is the ALERT red light
+  pinMode(19, INPUT); // this is the alert pushbutton
+  pinMode(20, INPUT); // this is the flash pushbutton
+  Serial.println("starting");
 }
 
 void loop()
@@ -67,8 +72,13 @@ void loop()
     Serial.println(key);
   }
 
-
-
+  //Serial.println("on");
+  //digitalWrite(13, HIGH); // sets the digital pin 13 on
+  //delay(1000);            // waits for a second
+  //Serial.println("off");
+  //digitalWrite(13, LOW);  // sets the digital pin 13 off
+  //delay(1000);            // waits for a second
+  
 
   /*
     lcd.specialChar("MRN");
