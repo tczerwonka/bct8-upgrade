@@ -25,6 +25,21 @@ static const uint8_t numberOfCharacters = 67;
 static const uint8_t sevenSegHex[67] = {0x06/*1*/, 0xE3/*2*/, 0xA7/*3*/, 0x36/*4*/, 0xB5/*5*/, 0xF4/*6*/, 0x07/*7*/, 0xF7/*8*/, 0x37/*9*/, 0xD7/*0*/, 0x00/*space*/, 0x20/*Dash*/, 0x80/*Underscore*/, 0x33/*Degree*/, 0xA0/*equal*/, 0x77/*A*/, 0xF4/*B*/, 0xE0/*C*/, 0xE6/*D*/, 0xF1/*E*/, 0x71/*F*/, 0xD5/*G*/, 0x74/*H*/, 0x04/*I*/, 0x86/*J*/, 0x70/*K*/, 0xD0/*L*/, 0x76/*M*/, 0x64/*N*/, 0xE4/*O*/, 0x73/*P*/, 0xDF/*Q*/, 0x60/*R*/, 0xB5/*S*/, 0xF0/*T*/, 0xC4/*U*/, 0xD6/*V*/, 0xF6/*W*/, 0x56/*X*/, 0xB6/*Y*/, 0xEB/*Z*/, 0x77/*a*/, 0xF4/*b*/, 0xE0/*c*/, 0xE6/*d*/, 0xF1/*e*/, 0x71/*f*/, 0xD5/*g*/, 0x74/*h*/, 0x04/*i*/, 0x86/*j*/, 0x70/*k*/, 0xD0/*l*/, 0x76/*m*/, 0x64/*n*/, 0xE4/*o*/, 0x73/*p*/, 0xDF/*q*/, 0x60/*r*/, 0xB5/*s*/, 0xF0/*t*/, 0xC4/*u*/, 0xD6/*v*/, 0xF6/*w*/, 0x56/*x*/, 0xB6/*y*/, 0xEB/*z*/};
 static const uint8_t charArray[67] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ' ', '-', '_', '*', '=', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
+/*------------------------------------*/
+/* multi-segment chars */
+struct multiSeg {
+  char symbol[2];
+  uint8_t sw;
+  uint8_t ne;
+};
+
+static const uint8_t multiSegChars = 1;
+static const multiSeg elementsAN[] = {
+  {"A", B00000001, B00000001} 
+};
+
+
+/*------------------------------------*/
 /* special characters */
 struct specChar {
   char symbol[4];
@@ -71,6 +86,7 @@ static const specChar elements[] = {
 
 };
 
+/*------------------------------------*/
 
 
 /* LCD modes */
@@ -121,6 +137,7 @@ class KTMS1201
     void print(double, uint8_t decimals = 2);
 
     void specialChar(String);
+    void alphaNumeric(String);
 
   private:
     /* Private methods */

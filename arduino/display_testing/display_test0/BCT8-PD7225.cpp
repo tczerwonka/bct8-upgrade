@@ -327,8 +327,46 @@ void KTMS1201::print(double n, uint8_t digits)
 
 
 /*---------------------------------------------------------------------------*/
+/* alphaNumeric --                                                           */
+/*   the BCT8 has three alpha-numeric characters                             */
+/*---------------------------------------------------------------------------*/
+void KTMS1201::alphaNumeric(String characterArray)
+{
+  //figure out cursorPos -- user is going to pass in three chars max
+  //each element has two actual cursorPos spots numbered 4/3, 2/1, 0/?
+  //test starting at 4 I guess -- later this will need to change based
+  //on the place in the string
+  uint8_t cpos = 4;
+  
+  //iterate through all of the special characters that are
+  //available for the one that was specified
+  for(uint8_t i = 0; i < multiSegChars; i++)
+  {
+    if(characterArray == elementsAN[i].symbol)
+    {
+      uint8_t p = 15 - cpos;
+      digitalWrite(_CD, HIGH);
+      digitalWrite(_CS, LOW);
+      wait(); // Wait for the LCD to finish
+      write(_LoadPtr+p*2);
+  
+      digitalWrite(_CD, LOW);    //Put in data mode
+      wait(); // Wait for the LCD to finish
+
+      write(elementsAN[i].sw);
+      break;
+    }
+   
+  } 
+  digitalWrite(_CS, HIGH); //deselect LCD to display data  
+}
+
+
+
+/*---------------------------------------------------------------------------*/
 /* specialChar --                                                            */
 /*   the BCT8 has a bunch of special chars - deal with it here               */
+/*   This one works, leave it alone.                                         */
 /*---------------------------------------------------------------------------*/
 void KTMS1201::specialChar(String characterArray)
 {
