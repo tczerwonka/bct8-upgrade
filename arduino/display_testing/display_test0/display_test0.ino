@@ -79,7 +79,17 @@ void loop()
   //digitalWrite(13, LOW);  // sets the digital pin 13 off
   //delay(1000);            // waits for a second
 
-  lcd.alphaNumeric("ABC");
+  //lcd.alphaNumeric allows three letter strings to be printed
+  //in the left column
+  lcd.alphaNumeric("BAC");
+  delay(1000);
+  lcd.alphaNumeric("dfg");
+  delay(1000);
+  lcd.alphaNumeric("fEh");
+
+  //lcd.specialChar turns on certain segments in the LCD
+
+  lcd.specialChar("NWS");
   delay(1000);
 
   /*
