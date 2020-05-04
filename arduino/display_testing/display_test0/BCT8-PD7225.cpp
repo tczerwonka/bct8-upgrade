@@ -333,10 +333,9 @@ void KTMS1201::print(double n, uint8_t digits)
 void KTMS1201::alphaNumeric(String characterArray)
 {
   //figure out cursorPos -- user is going to pass in three chars max
-  //each element has two actual cursorPos spots numbered 4/3, 2/1, 0/?
-  //test starting at 4 I guess -- later this will need to change based
-  //on the place in the string
-  uint8_t cpos = 8;
+  //each element has two actual cursorPos spots numbered 7\8, 9\10, 11\12
+  //start at zero, but next char needs to be 2 then 4, ugh.
+  uint8_t cpos = 2;
   
   //iterate through all of the special characters that are
   //available for the one that was specified
@@ -344,7 +343,7 @@ void KTMS1201::alphaNumeric(String characterArray)
   {
     if(characterArray == elementsAN[i].symbol)
     {
-      uint8_t p = 15 - cpos;
+      uint8_t p = cpos + 7;
       digitalWrite(_CD, HIGH);
       digitalWrite(_CS, LOW);
       wait(); // Wait for the LCD to finish

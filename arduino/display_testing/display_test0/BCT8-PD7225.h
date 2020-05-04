@@ -33,9 +33,17 @@ struct multiSeg {
   uint8_t ne;
 };
 
-static const uint8_t multiSegChars = 1;
+static const uint8_t multiSegChars = 9;
 static const multiSeg elementsAN[] = {
-  {"A", B00100011, B01110100} 
+  {"A", B00100011, B01110100},
+  {"B", B00100111, B00011010},
+  {"C", B00000111, B00010000},
+  {"D", B00100110, B01100100},
+  {"E", B00100111, B00010000},
+  {"F", B00100011, B00010000},
+  {"G", B00000111, B01010100},
+  {"H", B00100011, B01100100},
+  {"I", B10000000, B00000001},
 };
 
 
