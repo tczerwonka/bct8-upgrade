@@ -78,7 +78,9 @@ void loop()
   //Serial.println("off");
   //digitalWrite(13, LOW);  // sets the digital pin 13 off
   //delay(1000);            // waits for a second
-  
+
+  lcd.alphaNumeric("A");
+  delay(1000);
 
   /*
     lcd.specialChar("MRN");

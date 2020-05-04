@@ -336,7 +336,7 @@ void KTMS1201::alphaNumeric(String characterArray)
   //each element has two actual cursorPos spots numbered 4/3, 2/1, 0/?
   //test starting at 4 I guess -- later this will need to change based
   //on the place in the string
-  uint8_t cpos = 4;
+  uint8_t cpos = 8;
   
   //iterate through all of the special characters that are
   //available for the one that was specified
@@ -349,11 +349,17 @@ void KTMS1201::alphaNumeric(String characterArray)
       digitalWrite(_CS, LOW);
       wait(); // Wait for the LCD to finish
       write(_LoadPtr+p*2);
-  
       digitalWrite(_CD, LOW);    //Put in data mode
       wait(); // Wait for the LCD to finish
-
       write(elementsAN[i].sw);
+      p++; 
+      digitalWrite(_CD, HIGH);
+      digitalWrite(_CS, LOW);
+      wait(); // Wait for the LCD to finish
+      write(_LoadPtr+p*2);
+      digitalWrite(_CD, LOW);    //Put in data mode
+      wait(); // Wait for the LCD to finish
+      write(elementsAN[i].ne);
       break;
     }
    

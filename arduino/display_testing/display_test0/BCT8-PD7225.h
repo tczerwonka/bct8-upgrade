@@ -35,7 +35,7 @@ struct multiSeg {
 
 static const uint8_t multiSegChars = 1;
 static const multiSeg elementsAN[] = {
-  {"A", B00000001, B00000001} 
+  {"A", B00100011, B01110100} 
 };
 
 
