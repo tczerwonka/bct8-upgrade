@@ -79,7 +79,7 @@ void loop()
   //digitalWrite(13, LOW);  // sets the digital pin 13 off
   //delay(1000);            // waits for a second
 
-  lcd.alphaNumeric("I");
+  lcd.alphaNumeric("ABC");
   delay(1000);
 
   /*

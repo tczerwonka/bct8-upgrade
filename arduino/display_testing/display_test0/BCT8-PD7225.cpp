@@ -1,11 +1,11 @@
 /*****************************************************************
-| KTM-S1201 Arduino library                                      |
-| Developed and maintanied by MCUdude                            |
-| https://github.com/MCUdude/KTMS1201                            |            
-|                                                                |
-| Based on Tronixstruff's work                                   |
-| tronixstuff.com/2013/03/11/arduino-and-ktm-s1201-lcd-modules   |
-| Released to the public domain                                  |
+  | KTM-S1201 Arduino library                                      |
+  | Developed and maintanied by MCUdude                            |
+  | https://github.com/MCUdude/KTMS1201                            |
+  |                                                                |
+  | Based on Tronixstruff's work                                   |
+  | tronixstuff.com/2013/03/11/arduino-and-ktm-s1201-lcd-modules   |
+  | Released to the public domain                                  |
 *****************************************************************/
 
 
@@ -19,14 +19,14 @@
 // Constructor with busy pin
 KTMS1201::KTMS1201(uint8_t NSCK, uint8_t SI, uint8_t CD, uint8_t RESET, uint8_t BUSY, uint8_t CS)
 {
-	// Store parameters
+  // Store parameters
   _SCK = NSCK;
   _SI = SI;
   _CD = CD;
   _RESET = RESET;
   _BUSY = BUSY;
   _CS = CS;
-  
+
   //Set inputs and outputs
   pinMode(_SCK, OUTPUT);
   pinMode(_SI, OUTPUT);
@@ -40,13 +40,13 @@ KTMS1201::KTMS1201(uint8_t NSCK, uint8_t SI, uint8_t CD, uint8_t RESET, uint8_t 
 // Constructor without busy pin
 KTMS1201::KTMS1201(uint8_t NSCK, uint8_t SI, uint8_t CD, uint8_t RESET, uint8_t CS)
 {
-	// Store parameters
+  // Store parameters
   _SCK = NSCK;
   _SI = SI;
   _CD = CD;
   _RESET = RESET;
   _CS = CS;
-  
+
   //Set inputs and outputs
   pinMode(_SCK, OUTPUT);
   pinMode(_SI, OUTPUT);
@@ -69,10 +69,10 @@ void KTMS1201::begin()
   // Setup command mode. See header for more info
   command(_Mode);
   command(_Sync);
-  command(_NoBlink); 
+  command(_NoBlink);
   command(_DispOn);
-  command(_NoDecode); 
-  command(_ClearDsp); 
+  command(_NoDecode);
+  command(_ClearDsp);
 }
 
 
@@ -94,18 +94,18 @@ void KTMS1201::customChar(uint8_t character)
   digitalWrite(_CD, HIGH);
   digitalWrite(_CS, LOW);
   wait(); // Wait for the LCD to finish
-  write(_LoadPtr+p*2);
-  
+  write(_LoadPtr + p * 2);
+
   digitalWrite(_CD, LOW);    //Put in data mode
   wait(); // Wait for the LCD to finish
   write(character);
-  digitalWrite(_CS, HIGH); //deselect LCD to display data 
+  digitalWrite(_CS, HIGH); //deselect LCD to display data
 }
 
 
 void KTMS1201::setCursor(uint8_t cursorPos)
 {
-	// Store cursor position
+  // Store cursor position
   _cursorPos = cursorPos;
 }
 
@@ -113,7 +113,7 @@ void KTMS1201::setCursor(uint8_t cursorPos)
 void KTMS1201::clear(uint8_t start, uint8_t stop)
 {
   // Clear the whole screen
-  if(start == 0 && stop >= 15)
+  if (start == 0 && stop >= 15)
     command(_ClearDsp);
   else
   {
@@ -121,9 +121,9 @@ void KTMS1201::clear(uint8_t start, uint8_t stop)
     setCursor(start);
     String blankSpace = "";
 
-    for(uint8_t i = 0; i < (stop - start + 1); i++) // Fill string with spaces
+    for (uint8_t i = 0; i < (stop - start + 1); i++) // Fill string with spaces
       blankSpace += ' ';
-      
+
     print(blankSpace);
     setCursor(currentCursorPos);
   }
@@ -131,44 +131,44 @@ void KTMS1201::clear(uint8_t start, uint8_t stop)
 
 
 void KTMS1201::blink(bool speed)
-{	
-	// Blink fast
-	if(speed == true)
-		command(_FBlink);
-	// Blink slow	
-	else
-		command(_SBlink);
+{
+  // Blink fast
+  if (speed == true)
+    command(_FBlink);
+  // Blink slow
+  else
+    command(_SBlink);
 }
 
 
 void KTMS1201::noBlink()
-{	
-	command(_NoBlink);
+{
+  command(_NoBlink);
 }
 
 
 void KTMS1201::display()
-{	
-	command(_DispOn);
+{
+  command(_DispOn);
 }
 
 
 void KTMS1201::noDisplay()
-{	
-	command(_DispOff);
+{
+  command(_DispOff);
 }
 
-  
+
 void KTMS1201::print(String str)
 {
   int8_t decimalPlace = -1;
-  
-  for(uint8_t i = 0; i < str.length(); i++)
+
+  for (uint8_t i = 0; i < str.length(); i++)
   {
-    if(str[i] == '.')
+    if (str[i] == '.')
     {
       str.remove(i, 1);
-      decimalPlace = i-1;
+      decimalPlace = i - 1;
     }
   }
 
@@ -179,33 +179,33 @@ void KTMS1201::print(String str)
 
   str.toUpperCase();
 
-  // Iterate through human readable array and stuff TextString with hex values. 
-  for(uint8_t i = 0; i < strLength; i++)
-  { 
-    for(uint8_t j = 0; j < numberOfCharacters; j++)
-    { 
-      if(str[i] == charArray[j]) 
+  // Iterate through human readable array and stuff TextString with hex values.
+  for (uint8_t i = 0; i < strLength; i++)
+  {
+    for (uint8_t j = 0; j < numberOfCharacters; j++)
+    {
+      if (str[i] == charArray[j])
       {
-        textString[i] = sevenSegHex[j]; 
-        break;        
+        textString[i] = sevenSegHex[j];
+        break;
       }
-    } 
+    }
   }
 
-  if(decimalPlace >= 0)
+  if (decimalPlace >= 0)
     textString[decimalPlace] |= 0x08; // bitwise or in the dot
-    
+
   digitalWrite(_CD, HIGH);
   digitalWrite(_CS, LOW);
   wait(); // Wait for the LCD to finish
-  write(_LoadPtr+p*2);
+  write(_LoadPtr + p * 2);
   digitalWrite(_CD, LOW);    //Put in data mode
   wait(); // Wait for the LCD to finish
 
-  for(uint8_t i = strLength; i > 0; i--) //display numbers (reverse order)
-    write(textString[i-1]);
+  for (uint8_t i = strLength; i > 0; i--) //display numbers (reverse order)
+    write(textString[i - 1]);
 
-  digitalWrite(_CS, HIGH); //deselect LCD to display data  
+  digitalWrite(_CS, HIGH); //deselect LCD to display data
 }
 
 
@@ -213,10 +213,10 @@ void KTMS1201::print(char* inputArray)
 {
   uint8_t arrayLength = 0; // It's not possible to use sizeof in a function
   uint8_t i = 0;
-  
-  while(inputArray[i] > 0) // ugly sizeof workaround
+
+  while (inputArray[i] > 0) // ugly sizeof workaround
   {
-    arrayLength = i+1;
+    arrayLength = i + 1;
     i++;
   }
 
@@ -224,30 +224,30 @@ void KTMS1201::print(char* inputArray)
 
   char textString[arrayLength];
 
-  // Iterate through human readable array and stuff TextString with hex values. 
-  for(i = 0; i < arrayLength; i++)
-  { 
-    for(uint8_t j = 0; j < numberOfCharacters; j++)
-    { 
-      if(inputArray[i] == charArray[j]) 
+  // Iterate through human readable array and stuff TextString with hex values.
+  for (i = 0; i < arrayLength; i++)
+  {
+    for (uint8_t j = 0; j < numberOfCharacters; j++)
+    {
+      if (inputArray[i] == charArray[j])
       {
-        textString[i] = sevenSegHex[j]; 
+        textString[i] = sevenSegHex[j];
         break;
       }
-    } 
+    }
   }
 
   digitalWrite(_CD, HIGH);
   digitalWrite(_CS, LOW);
   wait(); // Wait for the LCD to finish
-  write(_LoadPtr+p*2);
+  write(_LoadPtr + p * 2);
   digitalWrite(_CD, LOW);    //Put in data mode
   wait(); // Wait for the LCD to finish
 
-  for(uint8_t i = arrayLength; i > 0; i--) //display numbers (reverse order)
-    write(textString[i-1]);
+  for (uint8_t i = arrayLength; i > 0; i--) //display numbers (reverse order)
+    write(textString[i - 1]);
 
-  digitalWrite(_CS, HIGH); //deselect LCD to display data   
+  digitalWrite(_CS, HIGH); //deselect LCD to display data
 }
 
 
@@ -258,64 +258,64 @@ void KTMS1201::print(char character)
   digitalWrite(_CD, HIGH);
   digitalWrite(_CS, LOW);
   wait(); // Wait for the LCD to finish
-  write(_LoadPtr+p*2);
-  
+  write(_LoadPtr + p * 2);
+
   digitalWrite(_CD, LOW);    //Put in data mode
   wait(); // Wait for the LCD to finish
 
-  for(uint8_t i = 0; i < numberOfCharacters; i++)
-  { 
-    if(character == charArray[i])
+  for (uint8_t i = 0; i < numberOfCharacters; i++)
+  {
+    if (character == charArray[i])
     {
       write(sevenSegHex[i]);
       break;
     }
-  } 
+  }
 
-  digitalWrite(_CS, HIGH); //deselect LCD to display data  
+  digitalWrite(_CS, HIGH); //deselect LCD to display data
 }
 
 
 void KTMS1201::print(uint32_t n, uint8_t base)
 {
-  if(base > 1)
+  if (base > 1)
     printNumber(n, base);
 }
 
 
 void KTMS1201::print(int32_t n, uint8_t base)
 {
-  if(base > 1)
+  if (base > 1)
   {
-    if(n < 0) 
+    if (n < 0)
     {
       n = -n;
       printNumber(n, DEC, true);
     }
-    else 
-      printNumber(n, base); 
+    else
+      printNumber(n, base);
   }
 }
 
 
 void KTMS1201::print(uint16_t n, uint8_t base)
 {
-  if(base > 1)
+  if (base > 1)
     printNumber((uint32_t)n, base);
 }
 
 
 void KTMS1201::print(int16_t n, uint8_t base)
 {
-  if(base > 1)
+  if (base > 1)
   {
-    if(n < 0) 
+    if (n < 0)
     {
       n = -n;
       printNumber((int32_t)n, DEC, true);
     }
-    else 
-      printNumber((int16_t)n, base); 
+    else
+      printNumber((int16_t)n, base);
   }
 }
 
@@ -335,35 +335,75 @@ void KTMS1201::alphaNumeric(String characterArray)
   //figure out cursorPos -- user is going to pass in three chars max
   //each element has two actual cursorPos spots numbered 7\8, 9\10, 11\12
   //start at zero, but next char needs to be 2 then 4, ugh.
-  uint8_t cpos = 2;
-  
-  //iterate through all of the special characters that are
-  //available for the one that was specified
-  for(uint8_t i = 0; i < multiSegChars; i++)
+  uint8_t cpos = 4;
+
+  uint8_t strLength = characterArray.length();
+  characterArray.toUpperCase();
+  Serial.print("strlen:");
+  Serial.println(strLength);
+
+  // Iterate through supplied array and write to display
+  for (uint8_t str_arrayloc = 0; str_arrayloc < strLength; str_arrayloc++)
   {
-    if(characterArray == elementsAN[i].symbol)
-    {
-      uint8_t p = cpos + 7;
-      digitalWrite(_CD, HIGH);
-      digitalWrite(_CS, LOW);
-      wait(); // Wait for the LCD to finish
-      write(_LoadPtr+p*2);
-      digitalWrite(_CD, LOW);    //Put in data mode
-      wait(); // Wait for the LCD to finish
-      write(elementsAN[i].sw);
-      p++; 
-      digitalWrite(_CD, HIGH);
-      digitalWrite(_CS, LOW);
-      wait(); // Wait for the LCD to finish
-      write(_LoadPtr+p*2);
-      digitalWrite(_CD, LOW);    //Put in data mode
-      wait(); // Wait for the LCD to finish
-      write(elementsAN[i].ne);
-      break;
+    char tmp;
+
+    //some shitty code follows
+    if (str_arrayloc == 0) {
+      cpos = 0;
     }
-   
-  } 
-  digitalWrite(_CS, HIGH); //deselect LCD to display data  
+    if (str_arrayloc == 1) {
+      cpos = 2;
+    }
+    if (str_arrayloc == 2) {
+      cpos = 4;
+    }
+
+    Serial.print("cpos:");
+    Serial.println(cpos);
+
+    Serial.print("str_arrayloc:");
+    Serial.println(str_arrayloc);
+
+    tmp = characterArray[str_arrayloc];
+
+
+    Serial.print("print this:");
+    Serial.println(tmp);
+    Serial.println();
+
+
+
+    //iterate through all of the special characters that are
+    //available for the one that was specified
+    for (uint8_t i = 0; i < multiSegChars; i++)
+    {
+      if (tmp == elementsAN[i].symbol)
+      {
+        uint8_t p = cpos + 7;
+        digitalWrite(_CD, HIGH);
+        digitalWrite(_CS, LOW);
+        wait(); // Wait for the LCD to finish
+        write(_LoadPtr + p * 2);
+        digitalWrite(_CD, LOW);    //Put in data mode
+        wait(); // Wait for the LCD to finish
+        write(elementsAN[i].sw);
+        p++;
+        digitalWrite(_CD, HIGH);
+        digitalWrite(_CS, LOW);
+        wait(); // Wait for the LCD to finish
+        write(_LoadPtr + p * 2);
+        digitalWrite(_CD, LOW);    //Put in data mode
+        wait(); // Wait for the LCD to finish
+        write(elementsAN[i].ne);
+        break;
+      } //if char array matches sybol
+    } //for each multiseg
+
+  }
+
+
+
+  digitalWrite(_CS, HIGH); //deselect LCD to display data
 }
 
 
@@ -379,26 +419,26 @@ void KTMS1201::specialChar(String characterArray)
 
   //iterate through all of the special characters that are
   //available for the one that was specified
-  for(uint8_t i = 0; i < specialCharacters; i++)
-  { 
-    if(characterArray == elements[i].symbol)
+  for (uint8_t i = 0; i < specialCharacters; i++)
+  {
+    if (characterArray == elements[i].symbol)
     {
       uint8_t p = 15 - elements[i].pos;
       digitalWrite(_CD, HIGH);
       digitalWrite(_CS, LOW);
       wait(); // Wait for the LCD to finish
-      write(_LoadPtr+p*2);
-  
+      write(_LoadPtr + p * 2);
+
       digitalWrite(_CD, LOW);    //Put in data mode
       wait(); // Wait for the LCD to finish
 
       write(elements[i].code);
       break;
     }
-   
-  } 
 
-  digitalWrite(_CS, HIGH); //deselect LCD to display data  
+  }
+
+  digitalWrite(_CS, HIGH); //deselect LCD to display data
 
 }
 
@@ -414,63 +454,63 @@ void KTMS1201::printNumber(uint32_t number, uint8_t base, bool table)
   char *str = &buf[sizeof(buf) - 1];
 
   *str = '\0';
-  
-  do 
+
+  do
   {
     char c = number % base;
     number /= base;
-    
+
     *--str = c < 10 ? c + '0' : c + 'A' - 10;
   }
-  while(number);
+  while (number);
 
   // Add minus if negative number
-  if(table == true)
+  if (table == true)
     *--str = '-';
-   print(str);
+  print(str);
 }
 
 
-void KTMS1201::printFloat(double number, uint8_t digits) 
-{ 
+void KTMS1201::printFloat(double number, uint8_t digits)
+{
   String dblValue = "";
-  if(isnan(number))
+  if (isnan(number))
   {
     dblValue += "nan";
     print(dblValue);
     return;
   }
-  if(isinf(number))
+  if (isinf(number))
   {
     dblValue += "inf";
     print(dblValue);
     return;
   }
-  if(number > 4294967040.0)
+  if (number > 4294967040.0)
   {
     dblValue += "ovf";
     print(dblValue);
     return;
   }
-  if(number <-4294967040.0)
+  if (number < -4294967040.0)
   {
     dblValue += "ovf";
     print(dblValue);
     return;
   }
-  
+
   // Handle negative numbers
-  if(number < 0.0)
+  if (number < 0.0)
   {
-     dblValue += "-";
-     number = -number;
+    dblValue += "-";
+    number = -number;
   }
 
   // Round correctly so that print(1.999, 2) prints as "2.00"
   double rounding = 0.5;
-  for(uint8_t i = 0; i < digits; i++)
+  for (uint8_t i = 0; i < digits; i++)
     rounding /= 10.0;
-  
+
   number += rounding;
 
   // Extract the integer part of the number and print it
@@ -479,37 +519,37 @@ void KTMS1201::printFloat(double number, uint8_t digits)
   dblValue += (String)int_part;
 
   // Print the decimal point, but only if there are digits beyond
-  if(digits > 0)
+  if (digits > 0)
     dblValue += ".";
 
   // Extract digits from the remainder one at a time
-  while(digits-- > 0)
+  while (digits-- > 0)
   {
     remainder *= 10.0;
     int toPrint = int(remainder);
     dblValue += (String)toPrint;
-    remainder -= toPrint; 
-  } 
+    remainder -= toPrint;
+  }
   print(dblValue);
 }
 
 
 void KTMS1201::write(uint8_t character)
 {
-  for(uint8_t i = 0; i < 8; i++) 
+  for (uint8_t i = 0; i < 8; i++)
   {
-    digitalWrite(_SI, !!(character & (1 << (7-i))));
-    digitalWrite(_SCK,LOW);
+    digitalWrite(_SI, !!(character & (1 << (7 - i))));
+    digitalWrite(_SCK, LOW);
     wait(); // Wait for the LCD to finish
-    digitalWrite(_SCK, HIGH); 
+    digitalWrite(_SCK, HIGH);
   }
 }
 
 
 void KTMS1201::wait()
 {
-	if(_BUSY == 255)
-		delay(busyDelay);
-	else
-		while(digitalRead(_BUSY) == 0);
+  if (_BUSY == 255)
+    delay(busyDelay);
+  else
+    while (digitalRead(_BUSY) == 0);
 }
