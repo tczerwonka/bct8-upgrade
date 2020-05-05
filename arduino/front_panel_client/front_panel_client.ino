@@ -93,11 +93,19 @@ void showNewNumber() {
       unprocessed = false;
     }
     
-    //if the string starts with a # it's a number
+    //prefix numbers with #
     if (receivedChars[0] == '#' && unprocessed) {
-      char* freq = &receivedChars[1];
-      lcd.setCursor(8);
-      lcd.print(freq);
+      String freq = &receivedChars[1];
+      float f_freq = freq.toFloat();
+      lcd.setCursor(5);
+      lcd.print(f_freq,4);
+      //Serial.println(f_freq,4);
+      unprocessed = false;
+    }
+
+    //clear screen
+    if (receivedChars[0] == '@' && unprocessed) {
+      lcd.clear();
       unprocessed = false;
     }
 
