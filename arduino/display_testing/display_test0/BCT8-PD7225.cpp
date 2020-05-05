@@ -220,7 +220,7 @@ void KTMS1201::print(char* inputArray)
     i++;
   }
 
-  uint8_t p = 12 - arrayLength - _cursorPos;
+  uint8_t p = 15 - arrayLength - _cursorPos;
 
   char textString[arrayLength];
 
@@ -339,8 +339,7 @@ void KTMS1201::alphaNumeric(String characterArray)
 
   uint8_t strLength = characterArray.length();
   characterArray.toUpperCase();
-  Serial.print("strlen:");
-  Serial.println(strLength);
+
 
   // Iterate through supplied array and write to display
   for (uint8_t str_arrayloc = 0; str_arrayloc < strLength; str_arrayloc++)
@@ -358,19 +357,8 @@ void KTMS1201::alphaNumeric(String characterArray)
       cpos = 4;
     }
 
-    Serial.print("cpos:");
-    Serial.println(cpos);
-
-    Serial.print("str_arrayloc:");
-    Serial.println(str_arrayloc);
 
     tmp = characterArray[str_arrayloc];
-
-
-    Serial.print("print this:");
-    Serial.println(tmp);
-    Serial.println();
-
 
 
     //iterate through all of the special characters that are
