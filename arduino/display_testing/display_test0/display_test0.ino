@@ -81,11 +81,23 @@ void loop()
 
   //lcd.alphaNumeric allows three letter strings to be printed
   //in the left column
-  lcd.alphaNumeric("BAC");
+  lcd.alphaNumeric("ABC");
   delay(1000);
-  lcd.alphaNumeric("dfg");
+  lcd.alphaNumeric("def");
   delay(1000);
-  lcd.alphaNumeric("fEh");
+  lcd.alphaNumeric("ghi");
+  delay(1000);
+  lcd.alphaNumeric("jkl");
+  delay(1000);
+  lcd.alphaNumeric("mno");
+  delay(1000);
+  lcd.alphaNumeric("pqr");
+  delay(1000);
+  lcd.alphaNumeric("stu");
+  delay(1000);
+  lcd.alphaNumeric("vwx");
+  delay(1000);
+  lcd.alphaNumeric("yz*");
 
   //lcd.specialChar turns on certain segments in the LCD
 
