@@ -474,15 +474,15 @@ void KTMS1201::printFloat(double number, uint8_t digits)
     print(dblValue);
     return;
   }
-  if (number > 4294967040.0)
+  if (number >= 1000.0)
   {
-    dblValue += "ovf";
+    dblValue += "999.9999";
     print(dblValue);
     return;
   }
-  if (number < -4294967040.0)
+  if (number < 0.0)
   {
-    dblValue += "ovf";
+    dblValue += "0";
     print(dblValue);
     return;
   }
