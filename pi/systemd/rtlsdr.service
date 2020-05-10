@@ -1,0 +1,17 @@
+[Unit]
+Description=RTL-SDR Server
+
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+
+ExecStartPre=/bin/sleep 15
+ExecStart=/bin/sh -c ‘/usr/bin/rtl_tcp -a $(hostname -I)’
+#WorkingDirectory=/home/timc/
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

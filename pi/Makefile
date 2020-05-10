@@ -12,15 +12,24 @@
 
 prereqs:
 	sudo apt update
-	sudo apt install -y rtl-sdr 
-	sudo apt install -y mlocate
+	sudo apt install -y rtl-sdr librtlsdr0 soapysdr-module-rtlsdr libsoapysdr-dev
+	sudo apt install -y mlocate cmake
 	sudo /etc/cron.daily/mlocate
 	git clone git://git.osmocom.org/rtl-sdr.git ~/rtl-sdr
 	sudo cp ~/rtl-sdr/rtl-sdr.rules /etc/udev/rules.d/
 	sudo rmmod dvb_usb_rtl28xxu
 	sudo echo 'blacklist dvb_usb_rtl28xxu' | sudo tee --append /etc/modprobe.d/blacklist-dvb_usb_rtl28xxu.conf
+	sudo cp systemd/rtlsdr.service /etc/systemd/system/
+	sudo systemctl daemon-reload
+	sudo systemctl enable rtlsdr
+	sudo systemctl start rtlsdr
 
-
+rx_tools:
+	git clone https://github.com/rxseger/rx_tools ~/rx_tools
+	cd ~/rx_tools
+	cmake .
+	make
+	sudo make install
 
 
 diff:
