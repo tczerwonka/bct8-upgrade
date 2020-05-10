@@ -13,7 +13,7 @@
 prereqs:
 	sudo apt update
 	sudo apt install -y rtl-sdr librtlsdr0 soapysdr-module-rtlsdr libsoapysdr-dev
-	sudo apt install -y mlocate cmake
+	sudo apt install -y mlocate cmake jack
 	sudo /etc/cron.daily/mlocate
 	git clone git://git.osmocom.org/rtl-sdr.git ~/rtl-sdr
 	sudo cp ~/rtl-sdr/rtl-sdr.rules /etc/udev/rules.d/
