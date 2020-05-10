@@ -400,10 +400,13 @@ void KTMS1201::alphaNumeric(String characterArray)
 /* specialChar --                                                            */
 /*   the BCT8 has a bunch of special chars - deal with it here               */
 /*   This one works, leave it alone.                                         */
+/*   These should probably be or-ed in                                       */
 /*---------------------------------------------------------------------------*/
 void KTMS1201::specialChar(String characterArray)
 {
   //the cursorPos isn't really a thing here
+  //uint8_t p = 15 - _cursorPos;
+  uint8_t currentCursorPos = _cursorPos; // Store the current cursor position
 
   //iterate through all of the special characters that are
   //available for the one that was specified
@@ -427,6 +430,8 @@ void KTMS1201::specialChar(String characterArray)
   }
 
   digitalWrite(_CS, HIGH); //deselect LCD to display data
+  setCursor(currentCursorPos);
+
 
 }
 
