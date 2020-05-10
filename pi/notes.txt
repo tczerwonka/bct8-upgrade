@@ -3,3 +3,16 @@ amixer cset numid=3 1
 
 rx_fm -E wav -M fm -s 12k -l 25 -f 144390000 | aplay -t wav-
 
+
+#no idea why minicom doesn't work right
+
+timc@scanner-pi:~/bct8-upgrade $ echo -e "@" > /dev/ttyUSB0
+timc@scanner-pi:~/bct8-upgrade $ echo -e "146.520" > /dev/ttyUSB0
+timc@scanner-pi:~/bct8-upgrade $ echo -e "146.520" > /dev/ttyUSB0
+timc@scanner-pi:~/bct8-upgrade $ echo -e "146.5200" > /dev/ttyUSB0
+timc@scanner-pi:~/bct8-upgrade $ echo -e "#146.5200" > /dev/ttyUSB0
+timc@scanner-pi:~/bct8-upgrade $ echo -e "#001.68" > /dev/ttyUSB0
+timc@scanner-pi:~/bct8-upgrade $ echo -e "#001.6800" > /dev/ttyUSB0
+timc@scanner-pi:~/bct8-upgrade $ echo -e "#921.6800" > /dev/ttyUSB0
+timc@scanner-pi:~/bct8-upgrade $ echo -e "IP" > /dev/ttyUSB0
+ 
