@@ -33,7 +33,7 @@ struct multiSeg {
   uint8_t ne;
 };
 
-static const uint8_t multiSegChars = 28;
+static const uint8_t multiSegChars = 38;
 static const multiSeg elementsAN[] = {
   {'A', B00100011, B01110100},
   {'B', B00100111, B00011010},
@@ -61,8 +61,18 @@ static const multiSeg elementsAN[] = {
   {'X', B01010000, B00001010},
   {'Y', B10010000, B00000010},
   {'Z', B01000100, B00010010},
-  {'*', B11110000, B00001111},
-  {' ', B00000000, B00000000}
+  {'*', B11110000, B00001111},  
+  {' ', B00000000, B00000000},
+  {'0', B01000111, B01110010},
+  {'1', B00000000, B01100000},
+  {'2', B00100110, B00110100},
+  {'3', B00000100, B01110100},
+  {'4', B00100001, B01100100},
+  {'5', B00100101, B01010100},
+  {'6', B00100111, B01010100},
+  {'7', B01000000, B00010010},
+  {'8', B00100111, B01110100},  
+  {'9', B00100101, B01110100}
 };
 
 
@@ -74,6 +84,8 @@ struct specChar {
   uint8_t code;
 };
 
+
+//these should probably be bit-wise OR'ed in
 static const uint8_t specialCharacters = 34;
 static const specChar elements[] = {
   {"MRN", 0, B00000001},
