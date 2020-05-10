@@ -17,7 +17,7 @@ const byte numChars = 16;
 char receivedChars[numChars];   // an array to store the received data
 boolean newData = false;
 int dataNumber = 0;             // new for this version
-
+static float version = 100.0002;
 
 
 void setup() {
@@ -27,7 +27,14 @@ void setup() {
   pinMode(13, OUTPUT);    // this is the ALERT red light
   pinMode(19, INPUT);     // this is the alert pushbutton
   pinMode(20, INPUT);     // this is the flash pushbutton
-  Serial.println("starting");
+  Serial.println("DISPLAYUP");
+  //print version
+  lcd.clear();
+  lcd.setCursor(5);
+  lcd.print(version,4);
+  lcd.specialChar("FLS");
+  delay(1000);
+  lcd.clear();
 }
 
 
