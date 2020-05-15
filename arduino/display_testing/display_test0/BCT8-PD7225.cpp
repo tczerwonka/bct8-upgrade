@@ -16,7 +16,9 @@
 ******** PUBLIC METHODS ********
 *******************************/
 
+/*---------------------------------------------------------------------------*/
 // Constructor with busy pin
+/*---------------------------------------------------------------------------*/
 KTMS1201::KTMS1201(uint8_t NSCK, uint8_t SI, uint8_t CD, uint8_t RESET, uint8_t BUSY, uint8_t CS)
 {
   // Store parameters
@@ -37,7 +39,10 @@ KTMS1201::KTMS1201(uint8_t NSCK, uint8_t SI, uint8_t CD, uint8_t RESET, uint8_t 
 }
 
 
+
+/*---------------------------------------------------------------------------*/
 // Constructor without busy pin
+/*---------------------------------------------------------------------------*/
 KTMS1201::KTMS1201(uint8_t NSCK, uint8_t SI, uint8_t CD, uint8_t RESET, uint8_t CS)
 {
   // Store parameters
@@ -56,6 +61,9 @@ KTMS1201::KTMS1201(uint8_t NSCK, uint8_t SI, uint8_t CD, uint8_t RESET, uint8_t 
 }
 
 
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 void KTMS1201::begin()
 {
   digitalWrite(_SCK, HIGH);
@@ -76,6 +84,9 @@ void KTMS1201::begin()
 }
 
 
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 void KTMS1201::command(uint8_t cmd)
 {
   digitalWrite(_CD, HIGH);
@@ -87,6 +98,8 @@ void KTMS1201::command(uint8_t cmd)
 }
 
 
+
+/*---------------------------------------------------------------------------*/
 void KTMS1201::customChar(uint8_t character)
 {
   uint8_t p = 15 - _cursorPos;
@@ -103,6 +116,8 @@ void KTMS1201::customChar(uint8_t character)
 }
 
 
+
+/*---------------------------------------------------------------------------*/
 void KTMS1201::setCursor(uint8_t cursorPos)
 {
   // Store cursor position
@@ -110,6 +125,8 @@ void KTMS1201::setCursor(uint8_t cursorPos)
 }
 
 
+
+/*---------------------------------------------------------------------------*/
 void KTMS1201::clear(uint8_t start, uint8_t stop)
 {
   // Clear the whole screen
@@ -130,6 +147,8 @@ void KTMS1201::clear(uint8_t start, uint8_t stop)
 }
 
 
+
+/*---------------------------------------------------------------------------*/
 void KTMS1201::blink(bool speed)
 {
   // Blink fast
@@ -141,24 +160,32 @@ void KTMS1201::blink(bool speed)
 }
 
 
+
+/*---------------------------------------------------------------------------*/
 void KTMS1201::noBlink()
 {
   command(_NoBlink);
 }
 
 
+
+/*---------------------------------------------------------------------------*/
 void KTMS1201::display()
 {
   command(_DispOn);
 }
 
 
+
+/*---------------------------------------------------------------------------*/
 void KTMS1201::noDisplay()
 {
   command(_DispOff);
 }
 
 
+
+/*---------------------------------------------------------------------------*/
 void KTMS1201::print(String str)
 {
   int8_t decimalPlace = -1;
@@ -209,6 +236,8 @@ void KTMS1201::print(String str)
 }
 
 
+
+/*---------------------------------------------------------------------------*/
 void KTMS1201::print(char* inputArray)
 {
   uint8_t arrayLength = 0; // It's not possible to use sizeof in a function
@@ -251,6 +280,8 @@ void KTMS1201::print(char* inputArray)
 }
 
 
+
+/*---------------------------------------------------------------------------*/
 void KTMS1201::print(char character)
 {
   uint8_t p = 15 - _cursorPos;
@@ -276,6 +307,8 @@ void KTMS1201::print(char character)
 }
 
 
+
+/*---------------------------------------------------------------------------*/
 void KTMS1201::print(uint32_t n, uint8_t base)
 {
   if (base > 1)
@@ -283,6 +316,8 @@ void KTMS1201::print(uint32_t n, uint8_t base)
 }
 
 
+
+/*---------------------------------------------------------------------------*/
 void KTMS1201::print(int32_t n, uint8_t base)
 {
   if (base > 1)
@@ -298,6 +333,8 @@ void KTMS1201::print(int32_t n, uint8_t base)
 }
 
 
+
+/*---------------------------------------------------------------------------*/
 void KTMS1201::print(uint16_t n, uint8_t base)
 {
   if (base > 1)
@@ -305,6 +342,8 @@ void KTMS1201::print(uint16_t n, uint8_t base)
 }
 
 
+
+/*---------------------------------------------------------------------------*/
 void KTMS1201::print(int16_t n, uint8_t base)
 {
   if (base > 1)
@@ -319,6 +358,9 @@ void KTMS1201::print(int16_t n, uint8_t base)
   }
 }
 
+
+
+/*---------------------------------------------------------------------------*/
 void KTMS1201::print(double n, uint8_t digits)
 {
   printFloat(n, digits);
@@ -437,10 +479,11 @@ void KTMS1201::specialChar(String characterArray)
 
 
 
+/*---------------------------------------------------------------------------*/
 /********************************
 ******** PRIVATE METHODS ********
 ********************************/
-
+/*---------------------------------------------------------------------------*/
 void KTMS1201::printNumber(uint32_t number, uint8_t base, bool table)
 {
   char buf[8 * sizeof(long) + 1 + table]; // Assumes 8-bit chars plus zero byte
