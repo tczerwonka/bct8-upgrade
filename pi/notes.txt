@@ -1,5 +1,7 @@
 #set analog output
 amixer cset numid=3 1
+amixer cset numid=1 100%
+speaker-test -c2 -twav
 
 rx_fm -E wav -M fm -s 12k -l 25 -f 144390000 | aplay -t wav-
 
@@ -16,3 +18,19 @@ timc@scanner-pi:~/bct8-upgrade $ echo -e "#001.6800" > /dev/ttyUSB0
 timc@scanner-pi:~/bct8-upgrade $ echo -e "#921.6800" > /dev/ttyUSB0
 timc@scanner-pi:~/bct8-upgrade $ echo -e "IP" > /dev/ttyUSB0
  
+
+ 
+Tue 19 May 22:40:52 BST 2020
+rx_fm -v -E wav -M fm -s 12k -l 50 -f 144.390M -f 154.725M -f 146.520M -f 154.160M -f 158.760M -f 163.250M -f 155.610M -f 146.180M | aplay -twav
+
+
+rtl_fm -l 120 -f 154.160M  -f 158.760M -f 163.250M -f 155.610M -f 146.520M -s 200000 -r 48000 | aplay -r 48000 -f S16_LE
+
+rtl_fm -l 150 -f 154.160M -f 158.760M -f 163.250M -f 155.610M -s 200000 -r 48000 | aplay -r 48000 -f S16_LE
+
+#rtl_fm has a udp client...
+rtl_fm -f 93.7M -s 200000 -r 48000 | aplay -r 48000 -f S16_LE
+  790  ./udpclient.py freq 448600000
+  791  ./udpclient.py freq 93700000
+  792  ./udpclient.py freq 448600000
+
