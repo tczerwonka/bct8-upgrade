@@ -1,3 +1,5 @@
+#sudo apt install librtlsdr-dev
+
 #set analog output
 amixer cset numid=3 1
 amixer cset numid=1 100%
@@ -29,8 +31,14 @@ rtl_fm -l 120 -f 154.160M  -f 158.760M -f 163.250M -f 155.610M -f 146.520M -s 20
 rtl_fm -l 150 -f 154.160M -f 158.760M -f 163.250M -f 155.610M -s 200000 -r 48000 | aplay -r 48000 -f S16_LE
 
 #rtl_fm has a udp client...
+https://github.com/sysrun/rtl-sdr
 rtl_fm -f 93.7M -s 200000 -r 48000 | aplay -r 48000 -f S16_LE
   790  ./udpclient.py freq 448600000
   791  ./udpclient.py freq 93700000
   792  ./udpclient.py freq 448600000
+
+
+
+rtl_udp -l 120 -f 154.725M   -s 200000 -r 48000 | aplay -r 48000 -f S16_LE -c 1 -q -V mono -D sysdefault:CARD=ALSA
+
 
