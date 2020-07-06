@@ -1,0 +1,5 @@
+#CSV for scanner "memory"
+#position, frequency (hz), three-letter code, mode
+1,162550000,NWS,NBFM
+2,146520000,HAM,NBFM
+3,154775000,SHF,NBFM
