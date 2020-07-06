@@ -1,5 +1,5 @@
 #
-# Generic Makefile to assist with installing packages in a yum repo
+# Install the pi environment when the SD card inevitably dies
 #
 
 #RPMNAMELINE :=  $(shell cat *spec | grep Name:) 
@@ -31,13 +31,16 @@ rx_tools:
 	make
 	sudo make install
 
+rtl_udp:
+	git clone https://github.com/sysrun/rtl-sdr.git ~/rtl-udp
+	cd ~/rtl-udp
+	mkdir build && cd build
+	cmake ..
+	make
+	sudo make install
 
-diff:
-	${YUM} verify-rpm ${RPMNAME}
 
-install:
-	${SUDO} ${YUM} makecache --disablerepo=* --enablerepo=doit-ns,doit-ns-extras
-	${SUDO} ${YUM} update  --disablerepo=* --enablerepo=doit-ns,doit-ns-extras ${RPMNAME}
+
 
 help:
 	@echo "Use the 'diff' target to display differences;"
