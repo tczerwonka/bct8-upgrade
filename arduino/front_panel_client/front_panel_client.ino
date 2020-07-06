@@ -106,7 +106,15 @@ void showNewNumber() {
     if (receivedChars[0] == '#' && unprocessed) {
       String freq = &receivedChars[1];
       float f_freq = freq.toFloat();
-      lcd.setCursor(5);
+      //avoid problems with stray elements in characters less than 100
+      //blank first number and start in tens place -- this doesn't actually work right now
+      if (f_freq < 100) {
+        //lcd.setCursor(5);
+        //lcd.print('0');
+        lcd.setCursor(6); 
+      } else {
+        lcd.setCursor(5);
+      }
       lcd.print(f_freq,4);
       //Serial.println(f_freq,4);
       unprocessed = false;
