@@ -6,6 +6,8 @@
   # uses the KTMS1201 library
   # Developed and maintanied by MCUdude
   # https://github.com/MCUdude/KTMS1201
+  #
+  # This version - an Arduino Nano on ttyUSB0 with old bootloader
   ##############################################################################
 */
 
@@ -17,7 +19,7 @@ const byte numChars = 16;
 char receivedChars[numChars];   // an array to store the received data
 boolean newData = false;
 int dataNumber = 0;             // new for this version
-static float version = 100.0002;
+static float version = 100.0005;
 
 
 void setup() {
@@ -87,7 +89,7 @@ void recvWithEndMarker() {
 
 
 /////////////////////////////////////////////////////////////////////////////
-// recvWithEndMarker()
+// showNewNumber()
 /////////////////////////////////////////////////////////////////////////////
 void showNewNumber() {
   if (newData == true) { 
