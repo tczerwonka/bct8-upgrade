@@ -41,4 +41,7 @@ rtl_fm -f 93.7M -s 200000 -r 48000 | aplay -r 48000 -f S16_LE
 
 rtl_udp -l 120 -f 154.725M   -s 200000 -r 48000 | aplay -r 48000 -f S16_LE -c 1 -q -V mono -D sysdefault:CARD=ALSA
 
+#put in crontab
+@reboot	/usr/bin/screen -d -m -S rtludp /home/timc/bct8-upgrade/pi/bin/run_radio.sh
+@reboot	/usr/bin/screen -d -m -S fpclient /home/timc/bct8-upgrade/pi/bin/scan_client0.py
 
