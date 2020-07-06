@@ -23,6 +23,16 @@ frequency = 146520000
 
 
 ################################################################################
+# need WBFM vs NBFM in udp_client
+# need startups for rtl_udp and this client
+# need frequency min and max limits
+# need scanning functionality
+# need to modify arduino code to blank leading zero in frequency
+################################################################################
+
+
+
+################################################################################
 ################################################################################
 def read_loop():
     #open serial port
