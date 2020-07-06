@@ -22,4 +22,6 @@ while True:
           ser.write("!HAM\r\n")
       if (data == "U"):
           ser.write("146\r\n")
+      if (data == "D"):
+          ser.write("#146.520\r\n")
 

@@ -14,7 +14,7 @@ while True:
    data = ser.readline()[:-2] #get rid of newline cr
    if data:
       print data
-   if (data == "y"):
+   if (data == "d"):
       ser.write("192\r\n")
       time.sleep(1)
       ser.write("168\r\n")
