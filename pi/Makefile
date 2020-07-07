@@ -32,7 +32,10 @@ rx_tools:
 	sudo make install
 
 rtl_udp:
-	git clone https://github.com/sysrun/rtl-sdr.git ~/rtl-udp
+	#git clone https://github.com/sysrun/rtl-sdr.git ~/rtl-udp
+    #I made a clone for modifications
+    git clone https://github.com/tczerwonka/rtl-sdr.git ~/rtl-udp
+	#git clone https://github.com/sysrun/rtl-sdr.git ~/rtl-udp
 	cd ~/rtl-udp
 	mkdir build && cd build
 	cmake ..
