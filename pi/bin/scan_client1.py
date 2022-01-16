@@ -3,6 +3,8 @@
 #second version of the scanner client supporting P25
 #
 #TRUNK key sets to local P25 public safety
+#DATA key shows IP address
+#SRCH turns on NRSC5 decode
 #
 #receives output from modified op25 code via mqtt
 #other side is
@@ -17,6 +19,7 @@
 import socket, sys
 import time
 import os
+import signal
 import serial
 import re
 import subprocess
@@ -27,6 +30,8 @@ import paho.mqtt.client as mqttClient
 Connected = False
 broker = "localhost"
 
+hd_audio_channel = -1
+PID = 0
 
 #open serial port
 ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
@@ -83,6 +88,8 @@ def read_loop():
                 ser.write("146\r\n")
             if (data == "D"):
                 ser.write("#146.520\r\n")
+            if (data == "r"):
+                nrsc5()
             if (data == "d"):
                 #depends on route out but whatever
                 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -110,6 +117,7 @@ def read_loop():
 ################################################################################
 def main():
     setup()
+    mqtt_init()
     read_loop()
      
 
@@ -121,17 +129,11 @@ def setup():
     ser.write("@\r\n")
 
 
-################################################################################
-# trunk1
-# start the trunking process
-################################################################################
-def trunk1():
-    time.sleep(1)
-    ser.write("#152.7250\r\n")
-    time.sleep(1)
-    ser.write("!WX\r\n")
-    time.sleep(1)
 
+################################################################################
+#mqtt init
+################################################################################
+def mqtt_init():
     client = mqttClient.Client("Python")
     client.on_message = on_message
     client.on_connect = on_connect
@@ -141,7 +143,42 @@ def trunk1():
         print "not connected"
         time.sleep(0.1)
     print client.subscribe('mqtt/p25')
-    s = subprocess.Popen('/home/timc/op25.sh')
+
+
+
+################################################################################
+# nrsc5
+# HD audio
+# this doesn't die - need to do better with process crap
+################################################################################
+def nrsc5():
+    global hd_audio_channel
+    global PID
+    hd_audio_channel = hd_audio_channel + 1
+    if (hd_audio_channel == 3): 
+        hd_audio_channel = 0
+    ch = str(hd_audio_channel)
+    ser.write("HD" + ch + "\r\n")
+    print "hda " + ch
+    if (PID):
+        os.kill(PID, signal.SIGTERM)
+    PID = subprocess.Popen(['/usr/local/bin/nrsc5', '88.7', ch])
+
+
+
+################################################################################
+# trunk1
+# start the trunking process via shell script
+################################################################################
+def trunk1():
+    global PID
+    time.sleep(1)
+    ser.write("#152.7250\r\n")
+    time.sleep(1)
+    ser.write("!WX\r\n")
+    if (PID):
+        os.kill(PID, signal.SIGTERM)
+    PID = subprocess.Popen('/home/timc/op25.sh')
 
 
 
@@ -160,14 +197,46 @@ def on_message(client, userdata, message):
     #01/15/22 18:47:04.207448 [0] NAC 0x230 LCW: ec=0, pb=0, sf=0, lco=0, src_addr=0x0059db 
     #characters = [chr(ascii) for ascii in message.payload] #convert ascii to char
     #char_join = ''.join(characters)
-    if re.match(r".+NAC", message.payload):
+
+    #if this is the local sheriff
+    if re.match(r".+NAC 0x230", message.payload):
         print message.payload.split("=")
         r = message.payload.split("=")
-        print r[5]
-        ser.write("fde\r\n")
+        show_last_call(r[5][2:])
 
 
 
+################################################################################
+#show_last_call
+#this should be a file someday
+################################################################################
+def show_last_call(radio_id):
+    dict = {
+        '0059da': 'DSP', 
+        '0059dc': 'DSP', 
+        '0059db': 'DSP', 
+        '2318c7': 'S10',
+        '23cc14': 'S84',
+        '23ce07': 'S84',
+        '0059db': 'S17',
+        '000001': 'UNK',
+        '233fde': 'foo',
+        '2318ca': 'nnn',
+        '16777215': 'ALB'
+    }
+    if dict.get(radio_id):
+        print "heard" + radio_id + ": " + dict.get(radio_id)
+        ser.write(dict.get(radio_id) + "\r\n")
+    else:
+        print "unknown RID: " + radio_id
+        ser.write("UNK\r\n")
+
+    
+
+
+################################################################################
+#mqtt on_connect
+################################################################################
 def on_connect(client, userdata, frlags, rc):
     if rc == 0:
         print("Connected to broker")
@@ -175,6 +244,7 @@ def on_connect(client, userdata, frlags, rc):
         Connected = True
     else:
         print("Connection failed")
+
 
 
 ################################################################################
