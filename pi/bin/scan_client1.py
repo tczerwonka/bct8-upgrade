@@ -11,6 +11,9 @@
 #mosquitto_sub -h localhost -t 'mqtt/p25'
 #test with
 #mosquitto_pub -h localhost -t 'mqtt/p25' -m "01/15/22 18:47:02.949287 [0] NAC 0x230 LCW: ec=0, pb=0, sf=0, lco=0, src_addr=0x233fde"
+#
+#added this to crontab
+#@reboot /usr/bin/screen -d -m -S fpclient /home/timc/bct8-upgrade/pi/bin/scan_client1.py
 ################################################################################
 #pip install paho-mqtt
 ################################################################################
@@ -76,9 +79,11 @@ def read_loop():
                 #udp call
                 udp_send("freq", frequency)
             if (data == "M"):
+                #shutdown
                 time.sleep(1)
-                ser.write("@\r\n")
-                print "clear"
+                ser.write("OFF\r\n")
+                time.sleep(1)
+                os.system("/sbin/shutdown -h now")
             if (data == "M"):
                 ser.write("!HAM\r\n")
             if (data == "k"):
