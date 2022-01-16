@@ -5,6 +5,7 @@
 #TRUNK key sets to local P25 public safety
 #DATA key shows IP address
 #SRCH turns on NRSC5 decode
+#MUTE does a shutdown
 #
 #receives output from modified op25 code via mqtt
 #other side is
@@ -83,7 +84,7 @@ def read_loop():
                 time.sleep(1)
                 ser.write("OFF\r\n")
                 time.sleep(1)
-                os.system("/sbin/shutdown -h now")
+                os.system("/sbin/poweroff")
             if (data == "M"):
                 ser.write("!HAM\r\n")
             if (data == "k"):
