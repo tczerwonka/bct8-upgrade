@@ -206,7 +206,7 @@ def on_message(client, userdata, message):
 
     #if this is the local sheriff
     if re.match(r".+NAC 0x230", message.payload):
-        print message.payload.split("=")
+        #print message.payload.split("=")
         r = message.payload.split("=")
         show_last_call(r[5][2:])
 
@@ -215,26 +215,57 @@ def on_message(client, userdata, message):
 ################################################################################
 #show_last_call
 #this should be a file someday
-################################################################################
+#1 - 49 County Sheriff's Office
+#'2318c9': -- 27
+#50 - 51 County Emergency Management
+#70 - 79 Monticello Police Department
+#'2333cd' -- 77 monticello
+#80 - 89 New Glarus Police Department
+#90 - 95 Brooklyn Police Department
+#96 - 99 County Coroner's Office
+#100 - 199 Brodhead Police Department
+#200 - 299 Monroe Police Department
+#300 - 324 County Sheriff's Office (Part-Time Employees)
+#325 - 326 County Humane Society
+#400 - 499 Albany Police Department
+#720 - 729 Brodhead Fire Department
+#740 - 749 Juda Community Fire Department
+#750 - 759 Monroe Fire Department (Apparatus)
+#800 - 899 County EMS Units
+#6100 - 6199 Belleville Police Department
+#7500 - 7599 Monroe Fire Department (Personnel)
+#       '326a41': 'BLN', -- blanchardville
+#################################################################################
 def show_last_call(radio_id):
+    radio_id = radio_id.strip()
     dict = {
-        '0059da': 'DSP', 
-        '0059dc': 'DSP', 
-        '0059db': 'DSP', 
-        '2318c7': 'S10',
-        '23cc14': 'S84',
-        '23ce07': 'S84',
-        '0059db': 'S17',
         '000001': 'UNK',
+        '0059da': 'DSP', 
+        '0059db': 'DSP', 
+        '0059dc': 'DSP', 
+        '0059d9': 'DSP', 
+        '2318c7': 'S10',
+        '2318c9': 'S27',
+        '2318ca': 'S17',
+        '2318d1': 'S04',
+        '2318d2': 'S05',
+        '2318d9': 'S31',
+        '23ce06': 'NG2',
+        '23ce08': 'NG1',
+        '23cc14': 'NG4',
+        '23ce07': 'NG4',
+        '2333bd': 'MON',
+        '2333cc': 'MCL',
+        '2333cd': 'MCL',
         '233fde': 'foo',
-        '2318ca': 'nnn',
+        '326a41': 'BLN',
         '16777215': 'ALB'
     }
     if dict.get(radio_id):
-        print "heard" + radio_id + ": " + dict.get(radio_id)
+        print "heard: " + radio_id + ": " + dict.get(radio_id)
         ser.write(dict.get(radio_id) + "\r\n")
     else:
-        print "unknown RID: " + radio_id
+        print "unknown RID:" + radio_id + ":"
         ser.write("UNK\r\n")
 
     
