@@ -84,7 +84,7 @@ def read_loop():
                 time.sleep(1)
                 ser.write("OFF\r\n")
                 time.sleep(1)
-                os.system("/sbin/poweroff")
+                os.system("/home/timc/stop-radio")
             if (data == "M"):
                 ser.write("!HAM\r\n")
             if (data == "k"):
