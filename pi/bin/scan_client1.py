@@ -41,15 +41,24 @@ PID = 0
 ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
 frequency = 146520000
 
+current_state = 'idle'
+start_time = time.time()
 
 
 ################################################################################
 ################################################################################
 def read_loop():
+    global start_time
+    global current_state
     #open serial port
     state = 0
     candidate_frequency = "00000000"
     while True:
+        if ((time.time() > (start_time + 20)) & (current_state ==  'idle')):
+                print("default trunk1 after 20s")
+                ser.write("!MRN\r\n")
+                current_state = "trunk1"
+                trunk1()
         data = ser.readline()[:-2] # get rid of newline cr
         if data:
             print data
@@ -89,6 +98,7 @@ def read_loop():
                 ser.write("!HAM\r\n")
             if (data == "k"):
                 ser.write("!MRN\r\n")
+                current_state = "trunk1"
                 trunk1()
             if (data == "U"):
                 ser.write("146\r\n")
