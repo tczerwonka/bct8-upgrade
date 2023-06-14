@@ -27,7 +27,6 @@ PID = 0
 
 #open serial port
 ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
-frequency = 146520000
 
 current_state = 'idle'
 start_time = time.time()
@@ -64,12 +63,13 @@ freq_zone = [(0,21), (75,40)]
 freq_start = (3,25)
 
 text_zone = [(0,41), (127,63)]
-text_start = (2,44)
+text_start = (2,42)
 
 #next line -- frequency
 #next lines -- data -- 3 line buffer?
 ################################################################################
 
+frequency = "select:"
 mode = "P25"
 start_time = time.time()
 
@@ -77,6 +77,7 @@ start_time = time.time()
 ################################################################################
 
 def mainloop(device):
+    global frequency
     print("in mainloop")
     while True:
         data = ser.readline()[:-2] # get rid of newline cr
@@ -94,14 +95,27 @@ def mainloop(device):
             add_to_image.rectangle(mode_zone, fill="black", outline = "white")
             add_to_image.text(mode_start, mode , fill="white")
 
-            add_to_image.rectangle(freq_zone, fill="black", outline = "white")
-            font = make_font("FreePixel.ttf", 14)
-            add_to_image.text(freq_start, "154.7750", font=font, fill="white")
+            if (current_state == "idle"):
+                add_to_image.rectangle(freq_zone, fill="black", outline = "white")
+                font = make_font("FreePixel.ttf", 14)
+                add_to_image.text(freq_start, frequency, font=font, fill="white")
 
-            add_to_image.rectangle(text_zone, fill="black", outline = "white")
+                add_to_image.rectangle(text_zone, fill="black", outline = "black")
+                font = make_font("FreePixel.ttf", 10)
+                add_to_image.text(text_start, "trunk: grnshf\n1: nrcs", font=font, fill="white")
 
+            if (data == b'k'):
+                add_to_image.rectangle(freq_zone, fill="black", outline = "white")
+                font = make_font("FreePixel.ttf", 14)
+                frequency = "157.7750"
+                add_to_image.text(freq_start, frequency, font=font, fill="white")
+                add_to_image.rectangle(text_zone, fill="black", outline = "black")
+                trunk1()
 
+            ####last line of if data
             device.display(output)
+
+        #update time once per second
         if ((time.time() > (start_time + 1))):
             now = datetime.datetime.now(pytz.timezone('US/Central'))
             add_to_image.rectangle(time_zone, fill="black", outline = "white")
@@ -109,6 +123,15 @@ def mainloop(device):
             device.display(output)
 
 
+
+################################################################################
+################################################################################
+def trunk1():
+    global PID
+    time.sleep(1)
+    if (PID):
+        os.kill(PID, signal.SIGTERM)
+    PID = subprocess.Popen('/home/timc/op25.sh')
 
 
 ################################################################################
