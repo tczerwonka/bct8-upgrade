@@ -53,10 +53,19 @@ add_to_image = ImageDraw.Draw(output)
 #top line -- status -- rssi/time/mode
 rssi_zone = [(0,10), (20, 20)]
 rssi_start = (0,10)
+
 time_zone = [(21,10), (100,20)]
 time_start = (23,10)
+
 mode_zone = [(101,10), (127,20)]
 mode_start = (103,10)
+
+freq_zone = [(0,21), (75,40)]
+freq_start = (3,25)
+
+text_zone = [(0,41), (127,63)]
+text_start = (2,44)
+
 #next line -- frequency
 #next lines -- data -- 3 line buffer?
 ################################################################################
@@ -84,6 +93,14 @@ def mainloop(device):
             add_to_image.text(time_start, now.strftime("%H:%M:%S") , fill="white")
             add_to_image.rectangle(mode_zone, fill="black", outline = "white")
             add_to_image.text(mode_start, mode , fill="white")
+
+            add_to_image.rectangle(freq_zone, fill="black", outline = "white")
+            font = make_font("FreePixel.ttf", 14)
+            add_to_image.text(freq_start, "154.7750", font=font, fill="white")
+
+            add_to_image.rectangle(text_zone, fill="black", outline = "white")
+
+
             device.display(output)
         if ((time.time() > (start_time + 1))):
             now = datetime.datetime.now(pytz.timezone('US/Central'))
@@ -93,6 +110,12 @@ def mainloop(device):
 
 
 
+
+################################################################################
+################################################################################
+def make_font(name, size):
+    font_path = str(Path(__file__).resolve().parent.joinpath('fonts', name))
+    return ImageFont.truetype(font_path, size)
 
 
 
