@@ -1,0 +1,8 @@
+1:
+  frequency: 155.775
+  label: Green County Sheriff
+  command: foo dwa
+2:
+  frequency: 146.520
+  label: simplex
+  command: foo bar

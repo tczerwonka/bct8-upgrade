@@ -31,6 +31,8 @@ ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
 current_state = 'idle'
 start_time = time.time()
 
+#read the config file
+import yaml
 
 
 #oled
@@ -77,6 +79,18 @@ start_time = time.time()
 ################################################################################
 
 def mainloop(device):
+    channel_struct = read_configfile()
+    total_channels = len(channel_struct)
+
+    ################################################
+    #length
+    #dealing with channel struct
+    #print(channel_struct)
+    #for key in channel_struct:
+    #    print(key, '->', channel_struct[key])
+    #print("====")
+    #print(channel_struct[1]['frequency'])
+    ################################################
     global frequency
     print("in mainloop")
     while True:
@@ -139,6 +153,15 @@ def trunk1():
 def make_font(name, size):
     font_path = str(Path(__file__).resolve().parent.joinpath('fonts', name))
     return ImageFont.truetype(font_path, size)
+
+
+
+################################################################################
+################################################################################
+def read_configfile():
+    with open("scannerlist.yaml", "r") as f:
+        data_loaded = yaml.load(f)
+    return data_loaded
 
 
 
