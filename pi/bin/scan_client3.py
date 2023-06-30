@@ -213,9 +213,7 @@ def mainloop(device):
                     #start the receive process
                     current_state = "receive"
                     command = channel_struct[current_channel]['command']
-                    print("start ")
-                    print(command)
-                    print("\n")
+                    do_receive(command)
 
 
             ####last line of if data
@@ -232,12 +230,15 @@ def mainloop(device):
 
 ################################################################################
 ################################################################################
-def trunk1():
+def do_receive(command):
     global PID
     time.sleep(1)
+    print("starting ")
+    print(command)
+    print("\n")
     if (PID):
         os.kill(PID, signal.SIGTERM)
-    PID = subprocess.Popen('/home/timc/op25.sh')
+    PID = subprocess.Popen(command)
 
 
 ################################################################################

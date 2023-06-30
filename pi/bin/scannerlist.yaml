@@ -1,8 +1,15 @@
 1:
-  frequency: 155.775
-  label: Green County Sheriff
-  command: foo dwa
+  frequency: '155.775'
+  label: Green Sheriff
+  mode: P25
+  command: /home/timc/op25.sh
 2:
-  frequency: 146.520
-  label: simplex
+  frequency: '146.520'
+  label: 52 simplex
+  mode: FM
+  command: foo bar
+3:
+  frequency: '145.110'
+  label: GCARA Rpt
+  mode: FM
   command: foo bar
