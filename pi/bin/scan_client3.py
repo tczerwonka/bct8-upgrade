@@ -64,6 +64,9 @@ mode_start = (103,10)
 freq_zone = [(0,21), (75,40)]
 freq_start = (3,25)
 
+label_zone = [(65,21), (127,40)]
+label_start = (67,25)
+
 text_zone = [(0,41), (127,63)]
 text_start = (2,42)
 
@@ -79,8 +82,12 @@ start_time = time.time()
 ################################################################################
 
 def mainloop(device):
+    global frequency
+    global mode
+    global current_state
     channel_struct = read_configfile()
     total_channels = len(channel_struct)
+    current_channel = 1
 
     ################################################
     #length
@@ -91,7 +98,19 @@ def mainloop(device):
     #print("====")
     #print(channel_struct[1]['frequency'])
     ################################################
-    global frequency
+    #set the initial from the first item in the yaml file
+    frequency = channel_struct[current_channel]['frequency']
+    mode = channel_struct[current_channel]['mode']
+    label = channel_struct[current_channel]['label']
+    add_to_image.rectangle(freq_zone, fill="black", outline = "white")
+    font = make_font("FreePixel.ttf", 14)
+    add_to_image.rectangle(text_zone, fill="black", outline = "black")
+    add_to_image.rectangle(mode_zone, fill="black", outline = "white")
+    add_to_image.rectangle(label_zone, fill="black", outline = "white")
+    add_to_image.text(freq_start, frequency, font=font, fill="white")
+    add_to_image.text(mode_start, mode, fill="white")
+    add_to_image.text(label_start, label, fill="white")
+    ################################################
     print("in mainloop")
     while True:
         data = ser.readline()[:-2] # get rid of newline cr
@@ -106,25 +125,98 @@ def mainloop(device):
             add_to_image.text(rssi_start, "..!!", fill="white")
             add_to_image.rectangle(time_zone, fill="black", outline = "white")
             add_to_image.text(time_start, now.strftime("%H:%M:%S") , fill="white")
-            add_to_image.rectangle(mode_zone, fill="black", outline = "white")
-            add_to_image.text(mode_start, mode , fill="white")
+            #add_to_image.rectangle(mode_zone, fill="black", outline = "white")
+            #add_to_image.text(mode_start, mode , fill="white")
 
+            #print default of first channel
             if (current_state == "idle"):
+                frequency = channel_struct[current_channel]['frequency']
+                mode = channel_struct[current_channel]['mode']
+                label = channel_struct[current_channel]['label']
+
+                #add_to_image.rectangle(freq_zone, fill="black", outline = "white")
+                #font = make_font("FreePixel.ttf", 14)
+                #add_to_image.text(freq_start, frequency, font=font, fill="white")
+
+                #this is the data box below
+                #add_to_image.rectangle(text_zone, fill="black", outline = "black")
+                #font = make_font("FreePixel.ttf", 10)
+                #add_to_image.text(text_start, "trunk: grnshf\n1: nrcs", font=font, fill="white")
+
+
+
+            #if (data == b'k'):
+            #    add_to_image.rectangle(freq_zone, fill="black", outline = "white")
+            #    font = make_font("FreePixel.ttf", 14)
+            #    add_to_image.text(freq_start, frequency, font=font, fill="white")
+            #    add_to_image.rectangle(text_zone, fill="black", outline = "black")
+            #    trunk1()
+
+
+
+            #user pressed the UP button -- next channel
+            if (data == b'U'):
+                if (current_channel == total_channels):
+                    #at the end of the list, start over
+                    current_channel = 1
+                else:
+                    current_channel = current_channel + 1
+
+                frequency = channel_struct[current_channel]['frequency']
+                mode = channel_struct[current_channel]['mode']
+                label = channel_struct[current_channel]['label']
+
                 add_to_image.rectangle(freq_zone, fill="black", outline = "white")
                 font = make_font("FreePixel.ttf", 14)
-                add_to_image.text(freq_start, frequency, font=font, fill="white")
-
                 add_to_image.rectangle(text_zone, fill="black", outline = "black")
-                font = make_font("FreePixel.ttf", 10)
-                add_to_image.text(text_start, "trunk: grnshf\n1: nrcs", font=font, fill="white")
+                add_to_image.rectangle(mode_zone, fill="black", outline = "white")
+                add_to_image.rectangle(label_zone, fill="black", outline = "white")
+                add_to_image.text(freq_start, frequency, font=font, fill="white")
+                add_to_image.text(mode_start, mode, fill="white")
+                add_to_image.text(label_start, label, fill="white")
+                #trunk1()
 
-            if (data == b'k'):
+
+            #user pressed the DOWN button -- next channel
+            if (data == b'D'):
+                if (current_channel == 1):
+                    #at the start of the list, go to end
+                    current_channel = total_channels
+                else:
+                    current_channel = current_channel - 1
+
+                frequency = channel_struct[current_channel]['frequency']
+                mode = channel_struct[current_channel]['mode']
+                label = channel_struct[current_channel]['label']
+
                 add_to_image.rectangle(freq_zone, fill="black", outline = "white")
                 font = make_font("FreePixel.ttf", 14)
-                frequency = "157.7750"
-                add_to_image.text(freq_start, frequency, font=font, fill="white")
                 add_to_image.rectangle(text_zone, fill="black", outline = "black")
-                trunk1()
+                add_to_image.rectangle(mode_zone, fill="black", outline = "white")
+                add_to_image.rectangle(label_zone, fill="black", outline = "white")
+                add_to_image.text(freq_start, frequency, font=font, fill="white")
+                add_to_image.text(mode_start, mode , fill="white")
+                add_to_image.text(label_start, label, fill="white")
+                #trunk1()
+
+
+            #user wants that channel
+            if (data == b'i'):
+                if (current_state == "receive"):
+                    #kill the current process
+                    current_state = "idle"
+                    command = channel_struct[current_channel]['command']
+                    print("kill ")
+                    print(command)
+                    print("\n")
+                else:
+                    #start the receive process
+                    current_state = "receive"
+                    command = channel_struct[current_channel]['command']
+                    print("start ")
+                    print(command)
+                    print("\n")
+
 
             ####last line of if data
             device.display(output)
