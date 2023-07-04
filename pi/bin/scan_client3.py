@@ -23,7 +23,6 @@ Connected = False
 broker = "localhost"
 
 hd_audio_channel = -1
-PID = 0
 
 #open serial port
 ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
@@ -85,6 +84,7 @@ def mainloop(device):
     global frequency
     global mode
     global current_state
+    global PID
     channel_struct = read_configfile()
     total_channels = len(channel_struct)
     current_channel = 1
@@ -122,7 +122,7 @@ def mainloop(device):
 
 
             add_to_image.rectangle(rssi_zone, fill="black", outline = "white")
-            add_to_image.text(rssi_start, "..!!", fill="white")
+            add_to_image.text(rssi_start, "---", fill="white")
             add_to_image.rectangle(time_zone, fill="black", outline = "white")
             add_to_image.text(time_start, now.strftime("%H:%M:%S") , fill="white")
             #add_to_image.rectangle(mode_zone, fill="black", outline = "white")
@@ -206,14 +206,18 @@ def mainloop(device):
                     #kill the current process
                     current_state = "idle"
                     command = channel_struct[current_channel]['command']
-                    print("kill ")
-                    print(command)
-                    print("\n")
+                    print("killing pid", PID.pid)
+                    os.killpg(os.getpgid(PID.pid), signal.SIGTERM)
+                    add_to_image.rectangle(rssi_zone, fill="black", outline = "white")
+                    add_to_image.text(rssi_start, "---", fill="white")
                 else:
                     #start the receive process
                     current_state = "receive"
                     command = channel_struct[current_channel]['command']
-                    do_receive(command)
+                    PID = do_receive(command)
+                    print("started", command, "at pid", PID.pid)
+                    add_to_image.rectangle(rssi_zone, fill="black", outline = "black")
+                    add_to_image.text(rssi_start, "RX", fill="white")
 
 
             ####last line of if data
@@ -229,16 +233,15 @@ def mainloop(device):
 
 
 ################################################################################
+#do_receive
+#   function to start a command and return the PID    
 ################################################################################
 def do_receive(command):
-    global PID
     time.sleep(1)
-    print("starting ")
-    print(command)
-    print("\n")
-    if (PID):
-        os.kill(PID, signal.SIGTERM)
-    PID = subprocess.Popen(command)
+    #proc = subprocess.Popen(command)
+    proc = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid) 
+    #print("started", command, "at pid", proc.pid)
+    return proc
 
 
 ################################################################################
