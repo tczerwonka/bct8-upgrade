@@ -101,7 +101,7 @@ def mainloop(device):
     global mode
     global current_state
     global PID
-    channel_struct = read_configfile('scannerlist.yaml')
+    channel_struct = read_configfile('/home/timc/bct8-upgrade/misc/scannerlist.yaml')
     total_channels = len(channel_struct)
     current_channel = 1
     #print(p25_struct['23ce07']['name'])
@@ -344,7 +344,7 @@ def on_connect(client, userdata, frlags, rc):
 #   decode the RID to a value defined in cops.yaml
 #################################################################################
 def show_last_call(radio_id):
-    p25_struct = read_configfile('cops.yaml')
+    p25_struct = read_configfile('/home/timc/bct8-upgrade/misc/cops.yaml')
     radio_id = radio_id.strip()
     radio_id = radio_id.decode('ISO-8859-1')
     #if (p25_struct[radio_id]):
