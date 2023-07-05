@@ -2,6 +2,10 @@
 
 ################################################################################
 #scan_client3.py
+#
+# 2023 T Czerwonka tczerwonka@gmail.com
+# Put a RPI and RTL-SDR plus an OLED into an old BCT8 scanner chassis
+# along with an arduino to decode the front panel buttons
 # 
 ################################################################################
 
@@ -317,8 +321,10 @@ def on_message(client, userdata, message):
         if (temp != UNIT):
             UNIT = temp
             print(UNIT)
+            now = datetime.datetime.now(pytz.timezone('US/Central'))
+            to_print = now.strftime("%H:%M:%S") + " " + UNIT
             add_to_image.rectangle(text_zone, fill="black", outline = "black")
-            add_to_image.text(text_start1, UNIT , fill="white")
+            add_to_image.text(text_start1, to_print , fill="white")
 
     #if this is EMS
     if re.match(r".+NAC 0x231", message.payload.decode('ISO-8859-1')):
