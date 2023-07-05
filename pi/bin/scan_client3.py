@@ -17,7 +17,15 @@ import re
 import subprocess
 import shlex
 
+################################################################################
 #mqtt stuff
+#receives output from modified op25 code via mqtt
+#other side is
+#mosquitto_sub -h localhost -t 'mqtt/p25'
+#test with
+#mosquitto_pub -h localhost -t 'mqtt/p25' -m "01/15/22 18:47:02.949287 [0] NAC 0x230 LCW: ec=0, pb=0, sf=0, lco=0, src_addr=0x233fde"
+#pip install paho-mqtt
+################################################################################
 import paho.mqtt.client as mqttClient
 Connected = False
 broker = "localhost"
@@ -44,6 +52,13 @@ from time import sleep
 device=ssd1306(i2c(port=1, address=0x3C))
 device.clear()
 
+global UNIT
+global UNIT1
+global UNIT2
+UNIT = 0
+UNIT1 = 0
+UNIT2 = 0
+
 #uses PIL with image zones, hm.
 ### Initialize drawing zone (aka entire screen)
 output = Image.new("1", (128,64))
@@ -67,7 +82,8 @@ label_zone = [(65,21), (127,40)]
 label_start = (67,25)
 
 text_zone = [(0,41), (127,63)]
-text_start = (2,42)
+text_start1 = (2,42)
+text_start2 = (2,52)
 
 #next line -- frequency
 #next lines -- data -- 3 line buffer?
@@ -85,9 +101,10 @@ def mainloop(device):
     global mode
     global current_state
     global PID
-    channel_struct = read_configfile()
+    channel_struct = read_configfile('scannerlist.yaml')
     total_channels = len(channel_struct)
     current_channel = 1
+    #print(p25_struct['23ce07']['name'])
 
     ################################################
     #length
@@ -102,11 +119,11 @@ def mainloop(device):
     frequency = channel_struct[current_channel]['frequency']
     mode = channel_struct[current_channel]['mode']
     label = channel_struct[current_channel]['label']
-    add_to_image.rectangle(freq_zone, fill="black", outline = "white")
+    add_to_image.rectangle(freq_zone, fill="black", outline = "black")
     font = make_font("FreePixel.ttf", 14)
     add_to_image.rectangle(text_zone, fill="black", outline = "black")
     add_to_image.rectangle(mode_zone, fill="black", outline = "white")
-    add_to_image.rectangle(label_zone, fill="black", outline = "white")
+    add_to_image.rectangle(label_zone, fill="black", outline = "black")
     add_to_image.text(freq_start, frequency, font=font, fill="white")
     add_to_image.text(mode_start, mode, fill="white")
     add_to_image.text(label_start, label, fill="white")
@@ -123,7 +140,7 @@ def mainloop(device):
 
             add_to_image.rectangle(rssi_zone, fill="black", outline = "white")
             add_to_image.text(rssi_start, "---", fill="white")
-            add_to_image.rectangle(time_zone, fill="black", outline = "white")
+            add_to_image.rectangle(time_zone, fill="black", outline = "black")
             add_to_image.text(time_start, now.strftime("%H:%M:%S") , fill="white")
             #add_to_image.rectangle(mode_zone, fill="black", outline = "white")
             #add_to_image.text(mode_start, mode , fill="white")
@@ -226,9 +243,25 @@ def mainloop(device):
         #update time once per second
         if ((time.time() > (start_time + 1))):
             now = datetime.datetime.now(pytz.timezone('US/Central'))
-            add_to_image.rectangle(time_zone, fill="black", outline = "white")
+            add_to_image.rectangle(time_zone, fill="black", outline = "black")
             add_to_image.text(time_start, now.strftime("%H:%M:%S") , fill="white")
             device.display(output)
+
+
+
+################################################################################
+#mqtt initialization
+################################################################################
+def mqtt_init():
+    client = mqttClient.Client("Python")
+    client.on_message = on_message
+    client.on_connect = on_connect
+    client.connect(broker, port=1883)
+    client.loop_start()
+    while Connected != True:
+        print("not connected")
+        time.sleep(0.1)
+    print(client.subscribe('mqtt/p25'))
 
 
 
@@ -254,15 +287,83 @@ def make_font(name, size):
 
 ################################################################################
 ################################################################################
-def read_configfile():
-    with open("scannerlist.yaml", "r") as f:
+def read_configfile(yamlfile):
+    with open(yamlfile, "r") as f:
         data_loaded = yaml.load(f)
     return data_loaded
+
+
+################################################################################
+#only update the UNIT on change
+################################################################################
+def on_message(client, userdata, message):
+    global UNIT
+    #print "Message received: "  + message.payload
+    #somewhere in here parse the strings from op25
+    #print type(message.payload)
+    #01/15/22 18:47:02.949287 [0] NAC 0x230 LCW: ec=0, pb=0, sf=0, lco=0, src_addr=0x233fde
+    #01/15/22 18:47:03.313039 [0] NAC 0x230 LCW: ec=0, pb=0, sf=0, lco=0, src_addr=0x233fde
+    #01/15/22 18:47:03.373206 [0] NAC 0x230 LCW: ec=0, pb=0, sf=0, lco=15, src_addr=0x233fde
+    #01/15/22 18:47:04.207448 [0] NAC 0x230 LCW: ec=0, pb=0, sf=0, lco=0, src_addr=0x0059db
+    #characters = [chr(ascii) for ascii in message.payload] #convert ascii to char
+    #char_join = ''.join(characters)
+
+    #if this is the local sheriff
+    if re.match(r".+NAC 0x230", message.payload.decode('ISO-8859-1')):
+        #print message.payload.split("=")
+        r = message.payload.split(b"=")
+        temp = show_last_call(r[5][2:])
+        #only change the unit number when the caller changes:w
+        if (temp != UNIT):
+            UNIT = temp
+            print(UNIT)
+            add_to_image.rectangle(text_zone, fill="black", outline = "black")
+            add_to_image.text(text_start1, UNIT , fill="white")
+
+    #if this is EMS
+    if re.match(r".+NAC 0x231", message.payload.decode('ISO-8859-1')):
+        #print message.payload.split("=")
+        r = message.payload.split(b"=")
+        UNIT = show_last_call(r[5][2:])
+
+
+################################################################################
+#mqtt on_connect
+################################################################################
+def on_connect(client, userdata, frlags, rc):
+    if rc == 0:
+        print("Connected to broker")
+        global Connected
+        Connected = True
+    else:
+        print("Connection failed")
+
+
+################################################################################
+#show_last_call
+#   decode the RID to a value defined in cops.yaml
+#################################################################################
+def show_last_call(radio_id):
+    p25_struct = read_configfile('cops.yaml')
+    radio_id = radio_id.strip()
+    radio_id = radio_id.decode('ISO-8859-1')
+    #if (p25_struct[radio_id]):
+    try:
+        id = p25_struct[radio_id]['name']
+        #print("testing", p25_struct[radio_id]['name'])
+        #print(id)
+        return(id)
+    except:
+        id = "RID:" + radio_id
+        #print(id)
+        return(id)
+    
 
 
 
 ################################################################################
 def main():
+    mqtt_init()
     mainloop(device)
 
 if __name__ == "__main__":
