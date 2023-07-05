@@ -8,11 +8,6 @@
   label: VHF simplex
   mode: FM
   command: rtl_fm -N -f 146520000 - | play -t raw -r 24k -es -b 16 -c 1 -V1 -
-7:
-  frequency: '443.600'
-  label: UHF simplex
-  mode: FM
-  command: rtl_fm -N -f 443000000 - | play -t raw -r 24k -es -b 16 -c 1 -V1 -
 3:
   frequency: '145.110'
   label: GCARA Rpt
@@ -33,5 +28,28 @@
   label: WEKZ FM
   mode: WFM
   command: rtl_fm -W -r 48000 -f 93700000 - | aplay -r 48000 -f S16_LE -t raw -c 1
-
-
+7:
+  frequency: '443.600'
+  label: UHF simplex
+  mode: FM
+  command: rtl_fm -N -f 443000000 - | play -t raw -r 24k -es -b 16 -c 1 -V1 -
+8:
+  frequency: '88.7'
+  label: WERN HD0
+  mode: HD0
+  command: /usr/local/bin/nrsc5 88.7 0
+9:
+  frequency: '88.7'
+  label: WERN HD2
+  mode: HD1
+  command: /usr/local/bin/nrsc5 88.7 1
+10:
+  frequency: '88.7'
+  label: WERN HD2
+  mode: HD2
+  command: /usr/local/bin/nrsc5 88.7 2
+11:
+  frequency: '88.7'
+  label: WERN HD3
+  mode: HD3
+  command: /usr/local/bin/nrsc5 88.7 3
