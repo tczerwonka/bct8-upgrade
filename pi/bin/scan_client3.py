@@ -56,12 +56,14 @@ from time import sleep
 device=ssd1306(i2c(port=1, address=0x3C))
 device.clear()
 
-global UNIT
-global UNIT1
-global UNIT2
-UNIT = 0
-UNIT1 = 0
-UNIT2 = 0
+global TEXTLINE
+global TEXTLINE1
+global TEXTLINE2
+global TEXTLINE3
+TEXTLINE = ""
+TEXTLINE1 = ""
+TEXTLINE2 = ""
+TEXTLINE3 = ""
 
 #uses PIL with image zones, hm.
 ### Initialize drawing zone (aka entire screen)
@@ -69,25 +71,41 @@ output = Image.new("1", (128,64))
 add_to_image = ImageDraw.Draw(output)
 
 ################################################################################
+# screen is:
+#  0,0
+#                                               127,63
+################################################################################
 #top line -- status -- rssi/time/mode
 rssi_zone = [(0,10), (20, 20)]
 rssi_start = (0,10)
 
-time_zone = [(21,10), (100,20)]
-time_start = (23,10)
+#top center location
+#time_zone = [(21,10), (100,20)]
+#time_start = (23,10)
+#bottom right
+time_zone = [(75,55), (127,63)]
+time_start = (76,54)
+
 
 mode_zone = [(101,10), (127,20)]
 mode_start = (103,10)
 
-freq_zone = [(0,21), (75,40)]
-freq_start = (3,25)
+#mid screen
+#freq_zone = [(0,21), (75,40)]
+#freq_start = (3,25)
+freq_zone = [(21,10), (100,20)]
+freq_start = (23,10)
 
-label_zone = [(65,21), (127,40)]
-label_start = (67,25)
+#right of old freq
+#label_zone = [(65,21), (127,40)]
+#label_start = (67,25)
+label_zone = [(0,55), (75,63)]
+label_start = (1,54)
 
-text_zone = [(0,41), (127,63)]
-text_start1 = (2,42)
-text_start2 = (2,52)
+text_zone = [(0,22), (127,54)]
+text_start1 = (2,22)
+text_start2 = (2,32)
+text_start3 = (2,42)
 
 #next line -- frequency
 #next lines -- data -- 3 line buffer?
@@ -126,7 +144,7 @@ def mainloop(device):
     add_to_image.rectangle(freq_zone, fill="black", outline = "black")
     font = make_font("FreePixel.ttf", 14)
     add_to_image.rectangle(text_zone, fill="black", outline = "black")
-    add_to_image.rectangle(mode_zone, fill="black", outline = "white")
+    add_to_image.rectangle(mode_zone, fill="black", outline = "black")
     add_to_image.rectangle(label_zone, fill="black", outline = "black")
     add_to_image.text(freq_start, frequency, font=font, fill="white")
     add_to_image.text(mode_start, mode, fill="white")
@@ -146,7 +164,7 @@ def mainloop(device):
             add_to_image.text(rssi_start, "---", fill="white")
             add_to_image.rectangle(time_zone, fill="black", outline = "black")
             add_to_image.text(time_start, now.strftime("%H:%M:%S") , fill="white")
-            #add_to_image.rectangle(mode_zone, fill="black", outline = "white")
+            #add_to_image.rectangle(mode_zone, fill="black", outline = "black")
             #add_to_image.text(mode_start, mode , fill="white")
 
             #print default of first channel
@@ -187,11 +205,11 @@ def mainloop(device):
                 mode = channel_struct[current_channel]['mode']
                 label = channel_struct[current_channel]['label']
 
-                add_to_image.rectangle(freq_zone, fill="black", outline = "white")
+                add_to_image.rectangle(freq_zone, fill="black", outline = "black")
                 font = make_font("FreePixel.ttf", 14)
                 add_to_image.rectangle(text_zone, fill="black", outline = "black")
-                add_to_image.rectangle(mode_zone, fill="black", outline = "white")
-                add_to_image.rectangle(label_zone, fill="black", outline = "white")
+                add_to_image.rectangle(mode_zone, fill="black", outline = "black")
+                add_to_image.rectangle(label_zone, fill="black", outline = "black")
                 add_to_image.text(freq_start, frequency, font=font, fill="white")
                 add_to_image.text(mode_start, mode, fill="white")
                 add_to_image.text(label_start, label, fill="white")
@@ -210,11 +228,11 @@ def mainloop(device):
                 mode = channel_struct[current_channel]['mode']
                 label = channel_struct[current_channel]['label']
 
-                add_to_image.rectangle(freq_zone, fill="black", outline = "white")
+                add_to_image.rectangle(freq_zone, fill="black", outline = "black")
                 font = make_font("FreePixel.ttf", 14)
                 add_to_image.rectangle(text_zone, fill="black", outline = "black")
-                add_to_image.rectangle(mode_zone, fill="black", outline = "white")
-                add_to_image.rectangle(label_zone, fill="black", outline = "white")
+                add_to_image.rectangle(mode_zone, fill="black", outline = "black")
+                add_to_image.rectangle(label_zone, fill="black", outline = "black")
                 add_to_image.text(freq_start, frequency, font=font, fill="white")
                 add_to_image.text(mode_start, mode , fill="white")
                 add_to_image.text(label_start, label, fill="white")
@@ -298,10 +316,9 @@ def read_configfile(yamlfile):
 
 
 ################################################################################
-#only update the UNIT on change
+#only update the TEXTLINE on change
 ################################################################################
 def on_message(client, userdata, message):
-    global UNIT
     #print "Message received: "  + message.payload
     #somewhere in here parse the strings from op25
     #print type(message.payload)
@@ -317,20 +334,69 @@ def on_message(client, userdata, message):
         #print message.payload.split("=")
         r = message.payload.split(b"=")
         temp = show_last_call(r[5][2:])
-        #only change the unit number when the caller changes:w
-        if (temp != UNIT):
-            UNIT = temp
-            print(UNIT)
-            now = datetime.datetime.now(pytz.timezone('US/Central'))
-            to_print = now.strftime("%H:%M:%S") + " " + UNIT
-            add_to_image.rectangle(text_zone, fill="black", outline = "black")
-            add_to_image.text(text_start1, to_print , fill="white")
+        info_display(temp, 1)
 
     #if this is EMS
     if re.match(r".+NAC 0x231", message.payload.decode('ISO-8859-1')):
         #print message.payload.split("=")
         r = message.payload.split(b"=")
-        UNIT = show_last_call(r[5][2:])
+        TEXTLINE = show_last_call(r[5][2:])
+
+    #if this NRSC5
+    #02:11:34 Station name: WHHI
+    #02:11:34 Slogan: HD1
+    #02:11:34 Message: www.wpr.org
+    if re.match(r".+Station name", message.payload.decode('ISO-8859-1')):
+        #print("################################")
+        #print( message.payload.split(b":")[3])
+        #print("################################")
+        #r = message.payload.split(b":")
+        TEXTLINE = message.payload.split(b":")[3]
+
+    if re.match(r".+Message", message.payload.decode('ISO-8859-1')):
+        #print("################################")
+        #print( message.payload.split(b":")[3])
+        #print("################################")
+        temp = message.payload.split(b"=")[3]
+        #only change the unit number when the caller changes:w
+        if (temp != TEXTLINE):
+            TEXTLINE = temp
+            print(TEXTLINE)
+            now = datetime.datetime.now(pytz.timezone('US/Central'))
+            to_print = TEXTLINE
+            add_to_image.rectangle(text_zone, fill="black", outline = "white")
+            add_to_image.text(text_start1, to_print , fill="white")
+
+
+
+
+################################################################################
+################################################################################
+def info_display(line, time):
+    global TEXTLINE
+    global TEXTLINE1
+    global TEXTLINE2
+    temp = line
+    #only change the unit number when the caller changes:w
+    if (temp != TEXTLINE):
+        TEXTLINE = temp
+        print(TEXTLINE)
+        if(time == 1):
+            now = datetime.datetime.now(pytz.timezone('US/Central'))
+            to_print = now.strftime("%H:%M:%S") + " " + TEXTLINE
+        else:
+            to_print = TEXTLINE
+        TEXTLINE3 = TEXTLINE2
+        TEXTLINE2 = TEXTLINE1
+        TEXTLINE1 = to_print
+        add_to_image.rectangle(text_zone, fill="black", outline = "white")
+        #add_to_image.text(text_start1, to_print , fill="white")
+        #add_to_image.text(text_start2, to_print , fill="white")
+        add_to_image.text(text_start1, TEXTLINE1, fill="white")
+        add_to_image.text(text_start2, TEXTLINE2, fill="white")
+        add_to_image.text(text_start3, TEXTLINE3, fill="white")
+
+
 
 
 ################################################################################
