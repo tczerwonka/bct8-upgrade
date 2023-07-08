@@ -1,6 +1,6 @@
 1:
   frequency: '155.775'
-  label: Green Sheriff
+  label: Green Shf
   mode: P25
   command: cd /home/timc/op25/op25/gr-op25_repeater/apps; ./rx.py --args 'rtl' -N 'LNA:47' -S 2500000 -o 17e3 -q2 -d10 -T trunk.tsv -2 -l http:192.168.1.13:8080 -x 4 -v7 -U -O plughw:0,0 2>&1 | mosquitto_pub -l -t 'mqtt/p25'
 2:
@@ -34,22 +34,27 @@
   mode: FM
   command: rtl_fm -N -f 443000000 - | play -t raw -r 24k -es -b 16 -c 1 -V1 -
 8:
-  frequency: '88.7'
-  label: WERN HD0
+  frequency: '91.3'
+  label: WHHI HD0
   mode: HD0
-  command: /usr/local/bin/nrsc5 88.7 0
+  command: /usr/local/bin/nrsc5 91.3 0 2>&1 | mosquitto_pub -l -t 'mqtt/p25'
 9:
-  frequency: '88.7'
-  label: WERN HD2
+  frequency: '91.3'
+  label: WHHI HD1
   mode: HD1
-  command: /usr/local/bin/nrsc5 88.7 1
+  command: /usr/local/bin/nrsc5 91.3 1  2>&1| mosquitto_pub -l -t 'mqtt/p25'
 10:
-  frequency: '88.7'
-  label: WERN HD2
+  frequency: '91.3'
+  label: WHHI HD2
   mode: HD2
-  command: /usr/local/bin/nrsc5 88.7 2
+  command: /usr/local/bin/nrsc5 91.3 2  2>&1| mosquitto_pub -l -t 'mqtt/p25'
 11:
-  frequency: '88.7'
-  label: WERN HD3
+  frequency: '91.3'
+  label: WHHI HD3
   mode: HD3
-  command: /usr/local/bin/nrsc5 88.7 3
+  command: /usr/local/bin/nrsc5 91.3 3  2>&1| mosquitto_pub -l -t 'mqtt/p25'
+12:
+  frequency: '151.1375'
+  label: NIFOG VTAC11
+  mode: FM
+  command: rtl_fm -N -f 151137500 - | play -t raw -r 24k -es -b 16 -c 1 -V1 -

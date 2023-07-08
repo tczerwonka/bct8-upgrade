@@ -336,41 +336,22 @@ def on_message(client, userdata, message):
         temp = show_last_call(r[5][2:])
         info_display(temp, 1)
 
-    #if this is EMS
-    if re.match(r".+NAC 0x231", message.payload.decode('ISO-8859-1')):
-        #print message.payload.split("=")
-        r = message.payload.split(b"=")
-        TEXTLINE = show_last_call(r[5][2:])
-
     #if this NRSC5
     #02:11:34 Station name: WHHI
     #02:11:34 Slogan: HD1
     #02:11:34 Message: www.wpr.org
     if re.match(r".+Station name", message.payload.decode('ISO-8859-1')):
-        #print("################################")
-        #print( message.payload.split(b":")[3])
-        #print("################################")
-        #r = message.payload.split(b":")
-        TEXTLINE = message.payload.split(b":")[3]
+        info_display(message.payload.split(b":")[3], 0)
 
     if re.match(r".+Message", message.payload.decode('ISO-8859-1')):
-        #print("################################")
-        #print( message.payload.split(b":")[3])
-        #print("################################")
-        temp = message.payload.split(b"=")[3]
-        #only change the unit number when the caller changes:w
-        if (temp != TEXTLINE):
-            TEXTLINE = temp
-            print(TEXTLINE)
-            now = datetime.datetime.now(pytz.timezone('US/Central'))
-            to_print = TEXTLINE
-            add_to_image.rectangle(text_zone, fill="black", outline = "white")
-            add_to_image.text(text_start1, to_print , fill="white")
-
+        info_display(message.payload.split(b":")[3], 0)
 
 
 
 ################################################################################
+#info_display(line, time)
+#  line to print in 3-line center display along with rolling history
+#  if time = 1 -- then print time of printing
 ################################################################################
 def info_display(line, time):
     global TEXTLINE
@@ -390,11 +371,9 @@ def info_display(line, time):
         TEXTLINE2 = TEXTLINE1
         TEXTLINE1 = to_print
         add_to_image.rectangle(text_zone, fill="black", outline = "white")
-        #add_to_image.text(text_start1, to_print , fill="white")
-        #add_to_image.text(text_start2, to_print , fill="white")
-        add_to_image.text(text_start1, TEXTLINE1, fill="white")
+        add_to_image.text(text_start1, TEXTLINE3, fill="white")
         add_to_image.text(text_start2, TEXTLINE2, fill="white")
-        add_to_image.text(text_start3, TEXTLINE3, fill="white")
+        add_to_image.text(text_start3, TEXTLINE1, fill="white")
 
 
 
