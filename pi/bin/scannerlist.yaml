@@ -1,0 +1,55 @@
+1:
+  frequency: '155.775'
+  label: Green Shf
+  mode: P25
+  command: cd /home/timc/op25/op25/gr-op25_repeater/apps; ./rx.py --args 'rtl' -N 'LNA:47' -S 2500000 -o 17e3 -q2 -d10 -T trunk.tsv -2 -l http:192.168.1.13:8080 -x 4 -v7 -U -O plughw:0,0 2>&1 | mosquitto_pub -l -t 'mqtt/p25'
+2:
+  frequency: '146.520'
+  label: VHF simplex
+  mode: FM
+  command: rtl_fm -N -f 146520000 - | play -t raw -r 24k -es -b 16 -c 1 -V1 -
+3:
+  frequency: '145.110'
+  label: GCARA Rpt
+  mode: FM
+  command: rtl_fm -N -f 145110000 - | play -t raw -r 24k -es -b 16 -c 1 -V1 -
+4:
+  frequency: '162.550'
+  label: NOAA WX
+  mode: FM
+  command: rtl_fm -N -f 162550000 - | play -t raw -r 24k -es -b 16 -c 1 -V1 -
+5:
+  frequency: '162.400'
+  label: NOAA WX
+  mode: FM
+  command: rtl_fm -N -f 162400000 - | play -t raw -r 24k -es -b 16 -c 1 -V1 -
+6:
+  frequency: '93.700'
+  label: WEKZ FM
+  mode: WFM
+  command: rtl_fm -W -r 48000 -f 93700000 - | aplay -r 48000 -f S16_LE -t raw -c 1
+7:
+  frequency: '443.600'
+  label: UHF simplex
+  mode: FM
+  command: rtl_fm -N -f 443000000 - | play -t raw -r 24k -es -b 16 -c 1 -V1 -
+8:
+  frequency: '88.7'
+  label: WERN HD0
+  mode: HD0
+  command: /usr/local/bin/nrsc5 88.7 0
+9:
+  frequency: '88.7'
+  label: WERN HD2
+  mode: HD1
+  command: /usr/local/bin/nrsc5 88.7 1
+10:
+  frequency: '88.7'
+  label: WERN HD2
+  mode: HD2
+  command: /usr/local/bin/nrsc5 88.7 2
+11:
+  frequency: '88.7'
+  label: WERN HD3
+  mode: HD3
+  command: /usr/local/bin/nrsc5 88.7 3

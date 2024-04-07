@@ -238,6 +238,9 @@ def mainloop(device):
                 add_to_image.text(label_start, label, fill="white")
                 #trunk1()
 
+            #MUTE button = shutdown
+            if (data == b'M'):
+                PID = do_receive('/home/timc/stop-radio')
 
             #user wants that channel
             if (data == b'i'):

@@ -32,14 +32,16 @@
     name: dispatch db
 0059dc:
     name: dispatch dc
+2318cd:
+    name: Sheriff - 8
 2318c7:
     name: Sheriff - 10
 233fe4:
     name: Sheriff - 16
 2318c9:
-    name: Sheriff - 18
+    name: Sheriff - 25 
 2318ca:
-    name: Sheriff - 26
+    name: Sheriff - 23
 230101:
     name: 230101
 2318c8:
@@ -74,6 +76,8 @@
     name: Monticello
 233fde: 
     name: foo
+233fed:
+    name: Sheriff - 25
 326a41:
     name: Blanchardville
 16777215:
@@ -82,3 +86,5 @@
     name: Albany 400
 233fee:
     name: 233fee
+23ce05:
+    name: 1880
