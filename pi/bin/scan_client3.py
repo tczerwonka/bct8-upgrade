@@ -240,7 +240,15 @@ def mainloop(device):
 
             #MUTE button = shutdown
             if (data == b'M'):
+                info_display("SHUTDOWN", 2)
                 PID = do_receive('/home/timc/stop-radio')
+
+            #STATE button = print IP info
+            if (data == b's'):
+                #shell out this
+                #ip -4 addr | grep inet | grep -v 127 | awk '{print $2}'    
+                v4addr = get_ip()
+                info_display(v4addr, 2)
 
             #user wants that channel
             if (data == b'i'):
@@ -391,6 +399,26 @@ def on_connect(client, userdata, frlags, rc):
         Connected = True
     else:
         print("Connection failed")
+
+
+
+################################################################################
+#get_ip
+# just get the box address
+################################################################################
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.settimeout(0)
+    try:
+        # doesn't even have to be reachable
+        s.connect(('10.254.254.254', 1))
+        IP = s.getsockname()[0]
+    except Exception:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
+
 
 
 ################################################################################
